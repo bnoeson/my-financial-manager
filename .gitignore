@@ -25,5 +25,5 @@
 /.nb-gradle/
 
 ## Ignore confidential banking records
-/src/main/resources/csv/bnppf-records
-!/src/main/resources/csv/bnppf-records/.keep
+/src/main/resources/csv/bnppf-records/*
+!.gitkeep
