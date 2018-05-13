@@ -11,10 +11,7 @@ public class BnppfRecordItemProcessor implements ItemProcessor<BnppfRecord, Bnpp
 
     @Override
     public BnppfRecord process(final BnppfRecord bnppfRecord) throws Exception {
-        bnppfRecord.setCurrency(bnppfRecord.getCurrency().toLowerCase());
-
         log.info("Processing record "+bnppfRecord.getSequenceNumber());
-
         return bnppfRecord;
     }
 

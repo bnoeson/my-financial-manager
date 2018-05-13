@@ -18,6 +18,7 @@ public class BnppfRecord implements Serializable {
     private LocalDate valueDate;
     private BigDecimal amount;
     private String currency; // TODO enum
+    private String counterPartyAccountNumber;
     private String details;
     private String acountNumber;
 
@@ -31,6 +32,7 @@ public class BnppfRecord implements Serializable {
         this.setValueDate(builder.valueDate);
         this.setAmount(builder.amount);
         this.setCurrency(builder.currency);
+        this.setCounterPartyAccountNumber(builder.counterPartyAccountNumber);
         this.setDetails(builder.details);
         this.setAcountNumber(builder.acountNumber);
     }
@@ -41,6 +43,7 @@ public class BnppfRecord implements Serializable {
         private LocalDate valueDate;
         private BigDecimal amount;
         private String currency;
+        private String counterPartyAccountNumber;
         private String details;
         private String acountNumber;
 
@@ -66,6 +69,11 @@ public class BnppfRecord implements Serializable {
 
         public Builder currency(String currency){
             this.currency = currency;
+            return this;
+        }
+
+        public Builder counterPartyAccountNumber(String counterPartyAccountNumber){
+            this.counterPartyAccountNumber = counterPartyAccountNumber;
             return this;
         }
 
@@ -131,6 +139,14 @@ public class BnppfRecord implements Serializable {
 
     public void setCurrency(String currency) {
         this.currency = Validate.notEmpty(currency);
+    }
+
+    public String getCounterPartyAccountNumber() {
+        return counterPartyAccountNumber;
+    }
+
+    public void setCounterPartyAccountNumber(String counterPartyAccountNumber) {
+        this.counterPartyAccountNumber = counterPartyAccountNumber;
     }
 
     public String getDetails() {

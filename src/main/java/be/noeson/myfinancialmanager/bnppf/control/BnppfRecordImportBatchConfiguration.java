@@ -1,6 +1,7 @@
 package be.noeson.myfinancialmanager.bnppf.control;
 
 import be.noeson.myfinancialmanager.bnppf.entity.BnppfRecord;
+import be.noeson.myfinancialmanager.utils.NumberUtils;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -20,8 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import javax.sql.DataSource;
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Configuration
 @EnableBatchProcessing
@@ -37,29 +38,53 @@ public class BnppfRecordImportBatchConfiguration {
     @Qualifier("dataSource") // https://stackoverflow.com/questions/43455869/could-not-autowire-there-is-more-than-one-bean-of-datasource-type
     private DataSource dataSource;
 
+    private final static String CSV_RESOURCE_PATH = "csv/bnppf-records/";
+
     @Bean
     public FlatFileItemReader<BnppfRecord> reader() {
         FlatFileItemReader<BnppfRecord> reader = new FlatFileItemReader<>();
-        reader.setResource(new ClassPathResource("test_file.csv"));
+        reader.setResource(new ClassPathResource(CSV_RESOURCE_PATH + "test_file.csv"));
+
         DefaultLineMapper<BnppfRecord> lineMapper = new DefaultLineMapper<>();
-        lineMapper.setLineTokenizer(new DelimitedLineTokenizer());
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+        lineTokenizer.setDelimiter(";");
+        lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(new BnppfRecordFieldSetMapper());
+
         reader.setLineMapper(lineMapper);
-        reader.setLinesToSkip(0);
+        reader.setLinesToSkip(1);
         return reader;
     }
 
     private static class BnppfRecordFieldSetMapper implements FieldSetMapper<BnppfRecord> {
         public BnppfRecord mapFieldSet(FieldSet fieldSet) {
-            return new BnppfRecord.Builder()
-                .sequenceNumber(fieldSet.readString(0))
-                .executionDate(LocalDate.parse(fieldSet.readString(1)))
-                .valueDate(LocalDate.parse(fieldSet.readString(2)))
-                .amount(new BigDecimal(fieldSet.readString(3)))
-                .currency(fieldSet.readString(4))
-                .details(fieldSet.readString(5))
-                .acountNumber(fieldSet.readString(6))
-                .build();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            if(fieldSet.getFieldCount() == 7){
+                return new BnppfRecord.Builder()
+                        .sequenceNumber(fieldSet.readString(0))
+                        .executionDate(LocalDate.parse(fieldSet.readString(1),formatter))
+                        .valueDate(LocalDate.parse(fieldSet.readString(2),formatter))
+                        .amount(NumberUtils.parseCommaSeparatedDecimal(fieldSet.readString(3)))
+                        .currency(fieldSet.readString(4))
+                        .details(fieldSet.readString(5))
+                        .acountNumber(fieldSet.readString(6))
+                        .build();
+            }
+            else if (fieldSet.getFieldCount() == 8){
+                return new BnppfRecord.Builder()
+                        .sequenceNumber(fieldSet.readString(0))
+                        .executionDate(LocalDate.parse(fieldSet.readString(1),formatter))
+                        .valueDate(LocalDate.parse(fieldSet.readString(2),formatter))
+                        .amount(NumberUtils.parseCommaSeparatedDecimal(fieldSet.readString(3)))
+                        .currency(fieldSet.readString(4))
+                        .counterPartyAccountNumber(fieldSet.readString(5))
+                        .details(fieldSet.readString(6))
+                        .acountNumber(fieldSet.readString(7))
+                        .build();
+            }
+            else {
+                throw new RuntimeException("Record version not implemented : there should be 7 or 8 columns");
+            }
         }
     }
 
