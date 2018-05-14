@@ -59,24 +59,21 @@ public class BnppfRecordImportBatchConfiguration {
     private static class BnppfRecordFieldSetMapper implements FieldSetMapper<BnppfRecord> {
         public BnppfRecord mapFieldSet(FieldSet fieldSet) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            BnppfRecord.Builder builder = new BnppfRecord.Builder()
+                    .sequenceNumber(fieldSet.readString(0))
+                    .executionDate(LocalDate.parse(fieldSet.readString(1),formatter))
+                    .valueDate(LocalDate.parse(fieldSet.readString(2),formatter))
+                    .amount(NumberUtils.parseCommaSeparatedDecimal(fieldSet.readString(3)))
+                    .currency(fieldSet.readString(4));
+
             if(fieldSet.getFieldCount() == 7){
-                return new BnppfRecord.Builder()
-                        .sequenceNumber(fieldSet.readString(0))
-                        .executionDate(LocalDate.parse(fieldSet.readString(1),formatter))
-                        .valueDate(LocalDate.parse(fieldSet.readString(2),formatter))
-                        .amount(NumberUtils.parseCommaSeparatedDecimal(fieldSet.readString(3)))
-                        .currency(fieldSet.readString(4))
+                return builder
                         .details(fieldSet.readString(5))
                         .acountNumber(fieldSet.readString(6))
                         .build();
             }
             else if (fieldSet.getFieldCount() == 8){
-                return new BnppfRecord.Builder()
-                        .sequenceNumber(fieldSet.readString(0))
-                        .executionDate(LocalDate.parse(fieldSet.readString(1),formatter))
-                        .valueDate(LocalDate.parse(fieldSet.readString(2),formatter))
-                        .amount(NumberUtils.parseCommaSeparatedDecimal(fieldSet.readString(3)))
-                        .currency(fieldSet.readString(4))
+                return builder
                         .counterPartyAccountNumber(fieldSet.readString(5))
                         .details(fieldSet.readString(6))
                         .acountNumber(fieldSet.readString(7))
