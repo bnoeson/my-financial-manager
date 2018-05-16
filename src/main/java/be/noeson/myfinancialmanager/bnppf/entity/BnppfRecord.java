@@ -2,24 +2,44 @@ package be.noeson.myfinancialmanager.bnppf.entity;
 
 import org.apache.commons.lang3.Validate;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Created by boris.noeson on 11/05/2018.
  */
+@Entity
+@Table(name = "BNPPF_RECORD")
 public class BnppfRecord implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "SEQUENCE_NR")
     private String sequenceNumber;
+
+    @Column(name = "EXECUTION_DT")
     private LocalDate executionDate;
+
+    @Column(name = "VALUE_DT")
     private LocalDate valueDate;
+
+    @Column(name = "AMOUNT")
     private BigDecimal amount;
+
+    @Column(name = "CURRENCY")
     private String currency; // TODO enum
-    private String counterPartyAccountNumber;
+
+    @Column(name = "COUNTERPARTY")
+    private String counterparty;
+
+    @Column(name = "DETAILS")
     private String details;
+
+    @Column(name = "ACCOUNT_NR")
     private String acountNumber;
 
     // default constructor
@@ -32,7 +52,7 @@ public class BnppfRecord implements Serializable {
         this.setValueDate(builder.valueDate);
         this.setAmount(builder.amount);
         this.setCurrency(builder.currency);
-        this.setCounterPartyAccountNumber(builder.counterPartyAccountNumber);
+        this.setCounterparty(builder.counterparty);
         this.setDetails(builder.details);
         this.setAcountNumber(builder.acountNumber);
     }
@@ -43,7 +63,7 @@ public class BnppfRecord implements Serializable {
         private LocalDate valueDate;
         private BigDecimal amount;
         private String currency;
-        private String counterPartyAccountNumber;
+        private String counterparty;
         private String details;
         private String acountNumber;
 
@@ -72,8 +92,8 @@ public class BnppfRecord implements Serializable {
             return this;
         }
 
-        public Builder counterPartyAccountNumber(String counterPartyAccountNumber){
-            this.counterPartyAccountNumber = counterPartyAccountNumber;
+        public Builder counterparty(String counterparty){
+            this.counterparty = counterparty;
             return this;
         }
 
@@ -105,7 +125,7 @@ public class BnppfRecord implements Serializable {
         return sequenceNumber;
     }
 
-    public void setSequenceNumber(String sequenceNumber) {
+    private void setSequenceNumber(String sequenceNumber) {
         this.sequenceNumber = Validate.notEmpty(sequenceNumber);
     }
 
@@ -113,7 +133,7 @@ public class BnppfRecord implements Serializable {
         return executionDate;
     }
 
-    public void setExecutionDate(LocalDate executionDate) {
+    private void setExecutionDate(LocalDate executionDate) {
         this.executionDate = Validate.notNull(executionDate);
     }
 
@@ -121,7 +141,7 @@ public class BnppfRecord implements Serializable {
         return valueDate;
     }
 
-    public void setValueDate(LocalDate valueDate) {
+    private void setValueDate(LocalDate valueDate) {
         this.valueDate = Validate.notNull(valueDate);
     }
 
@@ -129,7 +149,7 @@ public class BnppfRecord implements Serializable {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    private void setAmount(BigDecimal amount) {
         this.amount = Validate.notNull(amount);
     }
 
@@ -137,23 +157,23 @@ public class BnppfRecord implements Serializable {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    private void setCurrency(String currency) {
         this.currency = Validate.notEmpty(currency);
     }
 
-    public String getCounterPartyAccountNumber() {
-        return counterPartyAccountNumber;
+    public String getCounterparty() {
+        return counterparty;
     }
 
-    public void setCounterPartyAccountNumber(String counterPartyAccountNumber) {
-        this.counterPartyAccountNumber = counterPartyAccountNumber;
+    private void setCounterparty(String counterparty) {
+        this.counterparty = counterparty;
     }
 
     public String getDetails() {
         return details;
     }
 
-    public void setDetails(String details) {
+    private void setDetails(String details) {
         this.details = Validate.notEmpty(details);
     }
 
@@ -161,7 +181,7 @@ public class BnppfRecord implements Serializable {
         return acountNumber;
     }
 
-    public void setAcountNumber(String acountNumber) {
+    private void setAcountNumber(String acountNumber) {
         this.acountNumber = Validate.notEmpty(acountNumber);
     }
 }
