@@ -11,11 +11,13 @@ import { BnppfRecordTableComponent } from './modules/bnppf/components/bnppf-reco
 import { MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatToolbarModule, MatTableModule,
   MatSortModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BnppfRecordChartComponent } from './modules/bnppf/components/bnppf-record-chart/bnppf-record-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BnppfRecordTableComponent
+    BnppfRecordTableComponent,
+    BnppfRecordChartComponent
   ],
   imports: [
     BrowserModule,
