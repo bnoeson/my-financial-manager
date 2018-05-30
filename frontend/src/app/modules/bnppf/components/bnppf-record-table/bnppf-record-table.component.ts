@@ -23,7 +23,10 @@ export class BnppfRecordTableComponent implements OnInit {
       this.records = data;
       this.dataSource = new MatTableDataSource(this.records);
       this.dataSource.sort = this.sort;
-    });
+      },
+      // handle the error, otherwise will break the Observable
+      error => console.log(error)
+    );
   }
 
 }
