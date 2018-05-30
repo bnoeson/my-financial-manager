@@ -1,7 +1,9 @@
 package be.noeson.myfinancialmanager.bnppf.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.apache.commons.lang3.Validate;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -22,9 +24,13 @@ public class BnppfRecord implements Serializable {
     private String sequenceNumber;
 
     @Column(name = "EXECUTION_DT")
+    @JsonFormat(pattern = "yyyy/MM/dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate executionDate;
 
     @Column(name = "VALUE_DT")
+    @JsonFormat(pattern = "yyyy/MM/dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate valueDate;
 
     @Column(name = "AMOUNT")
