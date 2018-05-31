@@ -24,12 +24,12 @@ public class BnppfRecord implements Serializable {
     private String sequenceNumber;
 
     @Column(name = "EXECUTION_DT")
-    @JsonFormat(pattern = "yyyy/MM/dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate executionDate;
 
     @Column(name = "VALUE_DT")
-    @JsonFormat(pattern = "yyyy/MM/dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate valueDate;
 

@@ -10,12 +10,12 @@
 
   <ng-container matColumnDef="executionDate">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Execution Date </th>
-    <td mat-cell *matCellDef="let record"> {{record.executionDate}} </td>
+    <td mat-cell *matCellDef="let record"> {{record.executionDate | date:'dd-MM-yyyy'}} </td>
   </ng-container>
 
   <ng-container matColumnDef="valueDate">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> valueDate </th>
-    <td mat-cell *matCellDef="let record"> {{record.valueDate}} </td>
+    <td mat-cell *matCellDef="let record"> {{record.valueDate| date:'dd-MM-yyyy'}} </td>
   </ng-container>
 
 

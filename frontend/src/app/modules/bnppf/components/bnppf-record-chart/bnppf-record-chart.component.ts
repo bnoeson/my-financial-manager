@@ -17,18 +17,6 @@ export class BnppfRecordChartComponent implements AfterViewInit {
 
         let chartData = this.getBalanceHistory(data);
 
-        let chartDataExample = [{
-          t: Date.parse("1987/03/29"),
-          y: 1
-        }, {
-          t: Date.parse("1987/03/30"),
-          y: 10
-        }, {
-          t: Date.parse("1987/04/04"),
-          y: 20
-        }];
-        console.log(chartDataExample);
-
         let canvas = <HTMLCanvasElement> document.getElementById("bnppfRecordChart");
         let ctx = canvas.getContext("2d");
         let chart = new Chart(ctx, {
@@ -68,20 +56,33 @@ export class BnppfRecordChartComponent implements AfterViewInit {
 
   getBalanceHistory(data){
     let chartData = [];
-    // TODO sort by date, calculate cumulative amount
+
+    data = this.sortByDate(data);
+
     let balanceHistory = 0;
     data.forEach(d => {
+      console.log(d.sequenceNumber, new Date(d.executionDate));
         balanceHistory += d.amount;
         chartData.push(
           {
-            t: Date.parse(d.executionDate),
+            t: d.executionDate,
             y: balanceHistory
           }
         );
       }
     );
-    console.log(chartData);
     return chartData;
+  }
+
+  private sortByDate(data){
+    data.sort(function (a,b) {
+      if (a.executionDate < b.executionDate)
+        return -1;
+      if (a.executionDate > b.executionDate)
+        return 1;
+      return 0;
+    });
+    return data;
   }
 
 }
