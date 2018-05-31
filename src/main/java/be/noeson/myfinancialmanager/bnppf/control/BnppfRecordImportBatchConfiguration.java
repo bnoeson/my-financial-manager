@@ -38,10 +38,6 @@ public class BnppfRecordImportBatchConfiguration {
     @Autowired
     private EntityManagerFactory emf;
 
-    @Autowired
-    @Qualifier("dataSource") // https://stackoverflow.com/questions/43455869/could-not-autowire-there-is-more-than-one-bean-of-datasource-type
-    private DataSource dataSource;
-
     private final static String CSV_RESOURCE_PATH = "csv/bnppf-records/";
 
     @Bean
@@ -60,35 +56,6 @@ public class BnppfRecordImportBatchConfiguration {
         return reader;
     }
 
-    private static class BnppfRecordFieldSetMapper implements FieldSetMapper<BnppfRecord> {
-        public BnppfRecord mapFieldSet(FieldSet fieldSet) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            BnppfRecord.Builder builder = new BnppfRecord.Builder()
-                    .sequenceNumber(fieldSet.readString(0))
-                    .executionDate(LocalDate.parse(fieldSet.readString(1),formatter))
-                    .valueDate(LocalDate.parse(fieldSet.readString(2),formatter))
-                    .amount(NumberUtils.parseCommaSeparatedDecimal(fieldSet.readString(3)))
-                    .currency(fieldSet.readString(4));
-
-            if(fieldSet.getFieldCount() == 7){
-                return builder
-                        .details(fieldSet.readString(5))
-                        .acountNumber(fieldSet.readString(6))
-                        .build();
-            }
-            else if (fieldSet.getFieldCount() == 8){
-                return builder
-                        .counterparty(fieldSet.readString(5))
-                        .details(fieldSet.readString(6))
-                        .acountNumber(fieldSet.readString(7))
-                        .build();
-            }
-            else {
-                throw new RuntimeException("Record version not implemented : there should be 7 or 8 columns");
-            }
-        }
-    }
-
     @Bean
     public BnppfRecordItemProcessor processor() {
         return new BnppfRecordItemProcessor();
@@ -100,7 +67,6 @@ public class BnppfRecordImportBatchConfiguration {
         writer.setEntityManagerFactory(emf);
         return writer;
     }
-
 
     @Bean
     public Job bnppfRecordImportJob(BnppfRecordImportJobListener listener) {

@@ -10,7 +10,7 @@ public class BnppfRecordItemProcessor implements ItemProcessor<BnppfRecord, Bnpp
     private static final Logger log = LoggerFactory.getLogger(BnppfRecordItemProcessor.class);
 
     @Override
-    public BnppfRecord process(final BnppfRecord bnppfRecord) throws Exception {
+    public BnppfRecord process(final BnppfRecord bnppfRecord) {
         log.info("Processing record "+bnppfRecord.getSequenceNumber());
         return bnppfRecord;
     }

@@ -46,7 +46,7 @@ public class BnppfRecord implements Serializable {
     private String details;
 
     @Column(name = "ACCOUNT_NR")
-    private String acountNumber;
+    private String accountNumber;
 
     // default constructor
     public BnppfRecord() {
@@ -60,7 +60,7 @@ public class BnppfRecord implements Serializable {
         this.setCurrency(builder.currency);
         this.setCounterparty(builder.counterparty);
         this.setDetails(builder.details);
-        this.setAcountNumber(builder.acountNumber);
+        this.setAccountNumber(builder.accountNumber);
     }
 
     public static class Builder {
@@ -71,7 +71,7 @@ public class BnppfRecord implements Serializable {
         private String currency;
         private String counterparty;
         private String details;
-        private String acountNumber;
+        private String accountNumber;
 
         public Builder sequenceNumber(String sequenceNumber){
             this.sequenceNumber = sequenceNumber;
@@ -108,8 +108,8 @@ public class BnppfRecord implements Serializable {
             return this;
         }
 
-        public Builder acountNumber(String acountNumber){
-            this.acountNumber = acountNumber;
+        public Builder accountNumber(String accountNumber){
+            this.accountNumber = accountNumber;
             return this;
         }
 
@@ -183,11 +183,11 @@ public class BnppfRecord implements Serializable {
         this.details = Validate.notEmpty(details);
     }
 
-    public String getAcountNumber() {
-        return acountNumber;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    private void setAcountNumber(String acountNumber) {
-        this.acountNumber = Validate.notEmpty(acountNumber);
+    private void setAccountNumber(String accountNumber) {
+        this.accountNumber = Validate.notEmpty(accountNumber);
     }
 }

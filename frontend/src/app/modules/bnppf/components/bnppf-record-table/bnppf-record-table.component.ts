@@ -15,7 +15,7 @@ export class BnppfRecordTableComponent implements OnInit {
 
   constructor(private bnppfService: BnppfService) {
     this.columnsToDisplay = ['sequenceNumber', 'executionDate', 'valueDate', 'amount', 'currency',
-      'counterparty', 'details', 'acountNumber'];
+      'counterparty', 'details', 'accountNumber'];
   }
 
   ngOnInit() {

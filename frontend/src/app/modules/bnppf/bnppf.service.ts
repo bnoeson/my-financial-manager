@@ -29,7 +29,6 @@ export class BnppfService {
         )
         .subscribe(
         data => {
-          console.log(data);
           this.allRecordsObs.next(data);
           },
         error => {

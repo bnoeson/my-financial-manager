@@ -61,7 +61,6 @@ export class BnppfRecordChartComponent implements AfterViewInit {
 
     let balanceHistory = 0;
     data.forEach(d => {
-      console.log(d.sequenceNumber, new Date(d.executionDate));
         balanceHistory += d.amount;
         chartData.push(
           {
