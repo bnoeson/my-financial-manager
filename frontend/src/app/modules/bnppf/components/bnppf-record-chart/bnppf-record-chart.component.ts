@@ -23,7 +23,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
           type: 'line',
           data: {
             datasets: [{
-              label: '# of Votes',
+              label: 'Balance history',
               data: chartData,
               borderWidth: 1
             }]
@@ -44,6 +44,19 @@ export class BnppfRecordChartComponent implements AfterViewInit {
                   }
                 }
               }]
+            },
+            tooltips: {
+              callbacks: {
+                title: function(tooltipItem, data) {
+                  return new Date(data['datasets'][0]['data'][tooltipItem[0]['index']].t).toDateString(); // TODO remove when dto
+                },
+                label: function(tooltipItem, data) {
+                  return data['datasets'][0]['data'][tooltipItem['index']].y;
+                },
+                afterBody: function(tooltipItem, data) {
+                  return 'Change : '+data['datasets'][0]['data'][tooltipItem[0]['index']].amount;
+                }
+              }
             }
           }
         });
@@ -62,10 +75,11 @@ export class BnppfRecordChartComponent implements AfterViewInit {
     let balanceHistory = 0;
     data.forEach(d => {
         balanceHistory += d.amount;
-        chartData.push(
+        chartData.push( // TODO DTO
           {
             t: d.executionDate,
-            y: balanceHistory
+            y: balanceHistory.toFixed(2),
+            amount: d.amount.toFixed(2)
           }
         );
       }
