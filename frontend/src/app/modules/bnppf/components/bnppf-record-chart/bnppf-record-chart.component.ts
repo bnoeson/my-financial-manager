@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Chart } from 'chart.js';
 import {BnppfService} from "../../bnppf.service";
+import {BnppfRecordDto} from "../../model/BnppfRecordDto";
 
 @Component({
   selector: 'bnppf-record-chart',
@@ -13,7 +14,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.bnppfService.getAllRecords().subscribe(
-      data => { // TODO add type
+      data => {
 
         let chartData = this.getBalanceHistory(data);
 
@@ -29,6 +30,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
             }]
           },
           options: {
+            // SCALES - AXES
             scales: {
               yAxes: [{
                 ticks: {
@@ -45,10 +47,11 @@ export class BnppfRecordChartComponent implements AfterViewInit {
                 }
               }]
             },
+            // TOOLTIPS
             tooltips: {
               callbacks: {
                 title: function(tooltipItem, data) {
-                  return new Date(data['datasets'][0]['data'][tooltipItem[0]['index']].t).toDateString(); // TODO remove when dto
+                  return data['datasets'][0]['data'][tooltipItem[0]['index']].t.toDateString(); // TODO remove when dto
                 },
                 label: function(tooltipItem, data) {
                   return data['datasets'][0]['data'][tooltipItem['index']].y;
@@ -56,6 +59,13 @@ export class BnppfRecordChartComponent implements AfterViewInit {
                 afterBody: function(tooltipItem, data) {
                   return 'Change : '+data['datasets'][0]['data'][tooltipItem[0]['index']].amount;
                 }
+              }
+            },
+            // ONCLICK
+            onClick: function(evt, element) {
+              if(element.length > 0) {
+                let ind = element[0]._index;
+                console.log(data[ind]);
               }
             }
           }
@@ -67,7 +77,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
     );
   }
 
-  getBalanceHistory(data){
+  getBalanceHistory(data:BnppfRecordDto[]){
     let chartData = [];
 
     data = this.sortByDate(data);
