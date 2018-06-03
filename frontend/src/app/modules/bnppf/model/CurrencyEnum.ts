@@ -1,0 +1,3 @@
+enum CurrencyEnum {
+  EUR = "€" // TODO find a way to return "€" for display from dto...
+}

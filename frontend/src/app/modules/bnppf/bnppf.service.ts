@@ -29,7 +29,7 @@ export class BnppfService {
               .withExecutionDate(new Date(record.executionDate))
               .withValueDate(new Date(record.valueDate))
               .withAmount(record.amount)
-              .withCurrency(record.currency)
+              .withCurrency(<CurrencyEnum> record.currency)
               .withCounterparty(record.counterparty)
               .withDetails(record.details)
               .withAccountNumber(record.accountNumber)
