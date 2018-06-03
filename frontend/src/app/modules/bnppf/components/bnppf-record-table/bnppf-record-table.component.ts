@@ -1,6 +1,7 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {BnppfService} from "../../bnppf.service";
 import {MatTableDataSource, MatSort} from '@angular/material';
+import {BnppfRecordDto} from "../../model/BnppfRecordDto";
 
 @Component({
   selector: 'bnppf-record-table',
@@ -8,25 +9,26 @@ import {MatTableDataSource, MatSort} from '@angular/material';
   styleUrls: ['./bnppf-record-table.component.css']
 })
 export class BnppfRecordTableComponent implements OnInit {
-  private records: Array<any>;
+
+  @Input() records: Array<BnppfRecordDto>;
+  @Input() record: BnppfRecordDto;
   private columnsToDisplay = [];
   private dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private bnppfService: BnppfService) {
-    this.columnsToDisplay = ['sequenceNumber', 'executionDate', 'valueDate', 'amount', 'currency',
-      'counterparty', 'details', 'accountNumber'];
+  constructor() {
+    this.columnsToDisplay = ['executionDate', 'amount', 'counterparty', 'details', 'accountNumber'];
   }
 
   ngOnInit() {
-    this.bnppfService.getAllRecords().subscribe(data => {
-      this.records = data;
+    if(this.records){
       this.dataSource = new MatTableDataSource(this.records);
       this.dataSource.sort = this.sort;
-      },
-      // handle the error, otherwise will break the Observable
-      error => console.log(error)
-    );
+    }
+    else if(this.record){
+      this.records = new Array<BnppfRecordDto>(this.record);
+      this.dataSource = new MatTableDataSource(this.records);
+    }
   }
 
 }

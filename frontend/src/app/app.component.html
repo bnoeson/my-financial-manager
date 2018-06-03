@@ -4,4 +4,6 @@
 
 <bnppf-record-chart></bnppf-record-chart>
 
-<bnppf-record-table></bnppf-record-table>
+<div *ngIf='allRecords'> <!-- postpone initialization to wait for rest call success -->
+  <bnppf-record-table [records]="allRecords"></bnppf-record-table>
+</div>

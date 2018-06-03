@@ -2,6 +2,8 @@ import { AfterViewInit, Component } from '@angular/core';
 import { Chart } from 'chart.js';
 import {BnppfService} from "../../bnppf.service";
 import {BnppfRecordDto} from "../../model/BnppfRecordDto";
+import {MatDialog} from "@angular/material";
+import {BnppfRecordDialogComponent} from "../bnppf-record-dialog/bnppf-record-dialog.component";
 
 @Component({
   selector: 'bnppf-record-chart',
@@ -10,9 +12,10 @@ import {BnppfRecordDto} from "../../model/BnppfRecordDto";
 })
 export class BnppfRecordChartComponent implements AfterViewInit {
 
-  constructor(private bnppfService : BnppfService) { }
+  constructor(private bnppfService : BnppfService, public dialog: MatDialog) { }
 
   ngAfterViewInit() {
+    let self = this;
     this.bnppfService.getAllRecords().subscribe(
       data => {
 
@@ -65,7 +68,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
             onClick: function(evt, element) {
               if(element.length > 0) {
                 let ind = element[0]._index;
-                console.log(data[ind]);
+                self.openDialog(data[ind]);
               }
             }
           }
@@ -80,12 +83,12 @@ export class BnppfRecordChartComponent implements AfterViewInit {
   getBalanceHistory(data:BnppfRecordDto[]){
     let chartData = [];
 
-    data = this.sortByDate(data);
+    data = this.sortByExecutionDate(data);
 
     let balanceHistory = 0;
     data.forEach(d => {
         balanceHistory += d.amount;
-        chartData.push( // TODO DTO
+        chartData.push( // TODO DTO pour chart data
           {
             t: d.executionDate,
             y: balanceHistory.toFixed(2),
@@ -97,7 +100,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
     return chartData;
   }
 
-  private sortByDate(data){
+  private sortByExecutionDate(data){
     data.sort(function (a,b) {
       if (a.executionDate < b.executionDate)
         return -1;
@@ -107,5 +110,12 @@ export class BnppfRecordChartComponent implements AfterViewInit {
     });
     return data;
   }
+
+  openDialog(record : BnppfRecordDto): void {
+    let dialogRef = this.dialog.open(BnppfRecordDialogComponent, {
+      data: record
+    });
+  }
+
 
 }

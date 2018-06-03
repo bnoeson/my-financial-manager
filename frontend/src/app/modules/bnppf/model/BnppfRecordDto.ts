@@ -6,7 +6,7 @@ export class BnppfRecordDtoBuilder {
   private _executionDate: Date;
   private _valueDate: Date;
   private _amount: number;
-  private _currency: string;
+  private _currency: CurrencyEnum;
   private _counterparty: string;
   private _details: string;
   private _accountNumber: string;
@@ -56,11 +56,11 @@ export class BnppfRecordDtoBuilder {
     return this;
   }
 
-  get currency(): string {
+  get currency(): CurrencyEnum {
     return this._currency;
   }
 
-  withCurrency(value: string) {
+  withCurrency(value: CurrencyEnum) {
     this._currency = value;
     return this;
   }
@@ -104,7 +104,7 @@ export class BnppfRecordDto {
   private _executionDate: Date;
   private _valueDate: Date;
   private _amount: number;
-  private _currency: string;
+  private _currency: CurrencyEnum;
   private _counterparty: string;
   private _details: string;
   private _accountNumber: string;
@@ -161,11 +161,11 @@ export class BnppfRecordDto {
     this._amount = value;
   }
 
-  get currency(): string {
+  get currency(): CurrencyEnum {
     return this._currency;
   }
 
-  set currency(value: string) {
+  set currency(value: CurrencyEnum) {
     this._currency = value;
   }
 
@@ -192,5 +192,10 @@ export class BnppfRecordDto {
   set accountNumber(value: string) {
     this._accountNumber = value;
   }
+
+  getAmountWithCurrency() {
+    return this.amount + ' ' + this.currency;
+  }
+
 }
 
