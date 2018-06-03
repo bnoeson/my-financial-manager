@@ -1,1 +1,20 @@
+<mat-form-field style="display:block">
+  <input matInput
+         type="text"
+         ngxDaterangepickerMd
+         [(ngModel)]="selectedPeriod"
+         [showCustomRangeLabel]="true"
+         [ranges]="dateRanges"
+         class="form-control"
+         placeholder="Period"/>
+</mat-form-field>
+<!--
+  use that DATE-RANGE-PICKER (https://github.com/fetrarij/ngx-daterangepicker-material), waiting for this functionality in angular material
+  see issue : https://github.com/fetrarij/ngx-daterangepicker-material
+-->
+
+<button mat-raised-button (click)="updateChart()">Apply</button>
+
+
+
 <div><canvas id="bnppfRecordChart"></canvas></div>

@@ -12,6 +12,22 @@ import {BnppfRecordDialogComponent} from "../bnppf-record-dialog/bnppf-record-di
 })
 export class BnppfRecordChartComponent implements AfterViewInit {
 
+  // use that DATE-RANGE-PICKER (https://github.com/fetrarij/ngx-daterangepicker-material), waiting for this functionality in angular material
+  // see issue : https://github.com/fetrarij/ngx-daterangepicker-material
+  private selectedPeriod: SelectedPeriod;
+  private dateRanges: any = {
+    'Today': [new Date(), new Date()],
+    'This week': [new Date().setDate(new Date().getDate()-6), new Date()],
+    'This month': [new Date().setDate(new Date().getDate()-29), new Date()],
+    'This quarter': [new Date().setDate(new Date().getDate()-89), new Date()],
+    'This year': [new Date().setDate(new Date().getDate()-364), new Date()],
+    'All the time': [new Date().setDate(-36500), new Date()] // a century
+  };
+
+  private chart: Chart;
+  private completeBalanceHistory: ChartData[]; // TODO use dto for chart data
+  private currentBalanceHistory: ChartData[];
+
   constructor(private bnppfService : BnppfService, public dialog: MatDialog) { }
 
   ngAfterViewInit() {
@@ -19,16 +35,17 @@ export class BnppfRecordChartComponent implements AfterViewInit {
     this.bnppfService.getAllRecords().subscribe(
       data => {
 
-        let chartData = this.getBalanceHistory(data);
+        data = this.sortByExecutionDate(data);
+        this.completeBalanceHistory = this.getCompleteBalanceHistory(data);
 
         let canvas = <HTMLCanvasElement> document.getElementById("bnppfRecordChart");
         let ctx = canvas.getContext("2d");
-        let chart = new Chart(ctx, {
+        this.chart = new Chart(ctx, {
           type: 'line',
           data: {
             datasets: [{
               label: 'Balance history',
-              data: chartData,
+              data: this.completeBalanceHistory,
               borderWidth: 1
             }]
           },
@@ -54,7 +71,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
             tooltips: {
               callbacks: {
                 title: function(tooltipItem, data) {
-                  return data['datasets'][0]['data'][tooltipItem[0]['index']].t.toDateString(); // TODO remove when dto
+                  return data['datasets'][0]['data'][tooltipItem[0]['index']].t;
                 },
                 label: function(tooltipItem, data) {
                   return data['datasets'][0]['data'][tooltipItem['index']].y;
@@ -68,7 +85,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
             onClick: function(evt, element) {
               if(element.length > 0) {
                 let ind = element[0]._index;
-                self.openDialog(data[ind]);
+                self.openDialog(self.currentBalanceHistory[ind].record);
               }
             }
           }
@@ -80,24 +97,18 @@ export class BnppfRecordChartComponent implements AfterViewInit {
     );
   }
 
-  getBalanceHistory(data:BnppfRecordDto[]){
-    let chartData = [];
+  getCompleteBalanceHistory(records:BnppfRecordDto[]){
+    let balanceHistory: ChartData[] = [];
 
-    data = this.sortByExecutionDate(data);
-
-    let balanceHistory = 0;
-    data.forEach(d => {
-        balanceHistory += d.amount;
-        chartData.push( // TODO DTO pour chart data
-          {
-            t: d.executionDate,
-            y: balanceHistory.toFixed(2),
-            amount: d.amount.toFixed(2)
-          }
-        );
+    let balance = 0;
+    records.forEach(r => {
+        balance += r.amount;
+        balanceHistory.push(
+          new ChartData(r.executionDate, balance, r.amount, r)
+        )
       }
     );
-    return chartData;
+    return balanceHistory;
   }
 
   private sortByExecutionDate(data){
@@ -117,5 +128,44 @@ export class BnppfRecordChartComponent implements AfterViewInit {
     });
   }
 
+  updateChart(){
+    if(this.selectedPeriod){
+      this.currentBalanceHistory = this.filterBalanceHistoryForPeriod(this.selectedPeriod);
+
+      this.chart.data.datasets[0].data = this.currentBalanceHistory;
+      this.chart.update();
+    }
+    else{
+      this.chart.data.datasets[0].data = this.completeBalanceHistory;
+      this.chart.update();
+    }
+  }
+
+  filterBalanceHistoryForPeriod(period : SelectedPeriod){
+    return this.completeBalanceHistory.filter(function( b ) {
+      // /!\ bug : startDate is endDate and endDate is startDate
+      return b.t.getTime() >= new Date(period.endDate).getTime() && b.t.getTime() <= new Date(period.startDate).getTime();
+    });
+  }
+
+}
+
+class SelectedPeriod {
+  startDate: Date;
+  endDate: Date;
+}
+
+class ChartData {
+  t: Date;
+  y: string;
+  amount: string;
+  record: BnppfRecordDto;
+
+  constructor(t: Date, y: number, amount: number, record: BnppfRecordDto){
+    this.t = t;
+    this.y = y.toFixed(2);
+    this.amount = amount.toFixed(2);
+    this.record = record;
+  }
 
 }

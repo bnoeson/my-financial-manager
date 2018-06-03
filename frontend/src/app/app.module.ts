@@ -15,6 +15,8 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BnppfRecordChartComponent } from './modules/bnppf/components/bnppf-record-chart/bnppf-record-chart.component';
 import { BnppfRecordDialogComponent } from "./modules/bnppf/components/bnppf-record-dialog/bnppf-record-dialog.component";
+import {NgxDaterangepickerMd} from "ngx-daterangepicker-material";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { BnppfRecordDialogComponent } from "./modules/bnppf/components/bnppf-rec
     MatToolbarModule,
     MatTableModule,
     MatSortModule,
-    MatDialogModule
+    MatDialogModule,
+    NgxDaterangepickerMd,
+    FormsModule
   ],
   providers: [BnppfService],
   bootstrap: [AppComponent],
