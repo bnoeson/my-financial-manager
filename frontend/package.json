@@ -24,7 +24,7 @@
     "@angular/router": "^6.0.2",
     "chart.js": "^2.7.2",
     "core-js": "^2.5.4",
-    "ngx-daterangepicker-material": "^1.0.5",
+    "ngx-daterangepicker-material": "^1.0.6",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
   },

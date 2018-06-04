@@ -143,8 +143,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
 
   filterBalanceHistoryForPeriod(period : SelectedPeriod){
     return this.completeBalanceHistory.filter(function( b ) {
-      // /!\ bug : startDate is endDate and endDate is startDate
-      return b.t.getTime() >= new Date(period.endDate).getTime() && b.t.getTime() <= new Date(period.startDate).getTime();
+      return b.t.getTime() >= new Date(period.startDate).getTime() && b.t.getTime() <= new Date(period.endDate).getTime();
     });
   }
 
