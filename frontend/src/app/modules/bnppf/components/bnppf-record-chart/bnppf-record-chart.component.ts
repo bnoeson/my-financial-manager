@@ -37,6 +37,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
 
         data = this.sortByExecutionDate(data);
         this.completeBalanceHistory = this.getCompleteBalanceHistory(data);
+        this.currentBalanceHistory = this.completeBalanceHistory;
 
         let canvas = <HTMLCanvasElement> document.getElementById("bnppfRecordChart");
         let ctx = canvas.getContext("2d");
