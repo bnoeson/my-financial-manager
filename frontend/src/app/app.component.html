@@ -1,9 +1,23 @@
-<mat-toolbar color="primary">
-  <span>Welcome to {{title}}!</span>
-</mat-toolbar>
-
-<bnppf-record-chart></bnppf-record-chart>
-
-<div *ngIf='allRecords'> <!-- postpone initialization to wait for rest call success -->
-  <bnppf-record-table [records]="allRecords"></bnppf-record-table>
-</div>
+<mat-sidenav-container fullscreen>
+  <mat-sidenav #sidenav mode="push" class="app-sidenav">
+    <mat-toolbar color="primary">
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item class="sidenav-link" routerLink="/" (click)="sidenav.toggle()">
+        <mat-icon mat-list-icon>account_balance</mat-icon>
+        <span class="title" mat-line>Home</span>
+      </a>
+      <a mat-list-item class="sidenav-link" routerLink="bnppf" (click)="sidenav.toggle()">
+        <mat-icon mat-list-icon>account_balance</mat-icon>
+        <span class="title" mat-line>Bnppf</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="sidenav.toggle()" class="mat-icon-button sidenav-toggle-button" [hidden]="sidenav.opened">
+      <mat-icon aria-label="Menu" class="material-icons">menu</mat-icon>
+    </button>
+    <span class="title-center">{{title}}</span>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+</mat-sidenav-container>
