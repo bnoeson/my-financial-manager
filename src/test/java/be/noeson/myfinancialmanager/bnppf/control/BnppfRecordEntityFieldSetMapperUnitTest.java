@@ -1,6 +1,6 @@
 package be.noeson.myfinancialmanager.bnppf.control;
 
-import be.noeson.myfinancialmanager.bnppf.entity.BnppfRecord;
+import be.noeson.myfinancialmanager.bnppf.entity.BnppfRecordEntity;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BnppfRecordFieldSetMapperUnitTest {
+public class BnppfRecordEntityFieldSetMapperUnitTest {
 
     @Mock
     private FieldSet fieldSet;
@@ -68,7 +68,7 @@ public class BnppfRecordFieldSetMapperUnitTest {
         Mockito.when(fieldSet.readString(6)).thenReturn(accountNumberIn);
         Mockito.when(fieldSet.getFieldCount()).thenReturn(7);
 
-        BnppfRecord result = testObject.mapFieldSet(fieldSet);
+        BnppfRecordEntity result = testObject.mapFieldSet(fieldSet);
 
         assertEquals(result.getSequenceNumber(), sequenceNumberOut);
         assertEquals(result.getExecutionDate(), executionDateOut);
@@ -87,7 +87,7 @@ public class BnppfRecordFieldSetMapperUnitTest {
         Mockito.when(fieldSet.readString(7)).thenReturn(accountNumberIn);
         Mockito.when(fieldSet.getFieldCount()).thenReturn(8);
 
-        BnppfRecord result = testObject.mapFieldSet(fieldSet);
+        BnppfRecordEntity result = testObject.mapFieldSet(fieldSet);
 
         assertEquals(result.getSequenceNumber(), sequenceNumberOut);
         assertEquals(result.getExecutionDate(), executionDateOut);

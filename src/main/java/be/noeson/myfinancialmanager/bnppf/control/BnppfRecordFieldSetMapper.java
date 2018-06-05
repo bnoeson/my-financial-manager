@@ -1,7 +1,7 @@
 package be.noeson.myfinancialmanager.bnppf.control;
 
 
-import be.noeson.myfinancialmanager.bnppf.entity.BnppfRecord;
+import be.noeson.myfinancialmanager.bnppf.entity.BnppfRecordEntity;
 import be.noeson.myfinancialmanager.utils.NumberUtils;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
@@ -9,14 +9,14 @@ import org.springframework.batch.item.file.transform.FieldSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class BnppfRecordFieldSetMapper implements FieldSetMapper<BnppfRecord> {
+public class BnppfRecordFieldSetMapper implements FieldSetMapper<BnppfRecordEntity> {
 
     private final static String DATE_FORMAT_PATTERN = "dd/MM/yyyy";
 
     @Override
-    public BnppfRecord mapFieldSet(FieldSet fieldSet) {
+    public BnppfRecordEntity mapFieldSet(FieldSet fieldSet) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN);
-        BnppfRecord.Builder builder = new BnppfRecord.Builder()
+        BnppfRecordEntity.Builder builder = new BnppfRecordEntity.Builder()
                 .sequenceNumber(fieldSet.readString(0))
                 .executionDate(LocalDate.parse(fieldSet.readString(1),formatter))
                 .valueDate(LocalDate.parse(fieldSet.readString(2),formatter))

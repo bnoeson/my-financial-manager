@@ -14,7 +14,7 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "BNPPF_RECORD")
-public class BnppfRecord implements Serializable {
+public class BnppfRecordEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,10 +49,10 @@ public class BnppfRecord implements Serializable {
     private String accountNumber;
 
     // default constructor
-    public BnppfRecord() {
+    public BnppfRecordEntity() {
     }
 
-    private BnppfRecord(Builder builder) {
+    private BnppfRecordEntity(Builder builder) {
         this.setSequenceNumber(builder.sequenceNumber);
         this.setExecutionDate(builder.executionDate);
         this.setValueDate(builder.valueDate);
@@ -113,8 +113,8 @@ public class BnppfRecord implements Serializable {
             return this;
         }
 
-        public BnppfRecord build(){
-            return new BnppfRecord(this);
+        public BnppfRecordEntity build(){
+            return new BnppfRecordEntity(this);
         }
 
     }

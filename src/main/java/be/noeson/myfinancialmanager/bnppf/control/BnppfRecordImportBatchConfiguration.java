@@ -1,7 +1,6 @@
 package be.noeson.myfinancialmanager.bnppf.control;
 
-import be.noeson.myfinancialmanager.bnppf.entity.BnppfRecord;
-import be.noeson.myfinancialmanager.utils.NumberUtils;
+import be.noeson.myfinancialmanager.bnppf.entity.BnppfRecordEntity;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -11,19 +10,13 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Configuration
 @EnableBatchProcessing
@@ -41,11 +34,11 @@ public class BnppfRecordImportBatchConfiguration {
     private final static String CSV_RESOURCE_PATH = "csv/bnppf-records/";
 
     @Bean
-    public FlatFileItemReader<BnppfRecord> reader() {
-        FlatFileItemReader<BnppfRecord> reader = new FlatFileItemReader<>();
+    public FlatFileItemReader<BnppfRecordEntity> reader() {
+        FlatFileItemReader<BnppfRecordEntity> reader = new FlatFileItemReader<>();
         reader.setResource(new ClassPathResource(CSV_RESOURCE_PATH + "test_file.csv"));
 
-        DefaultLineMapper<BnppfRecord> lineMapper = new DefaultLineMapper<>();
+        DefaultLineMapper<BnppfRecordEntity> lineMapper = new DefaultLineMapper<>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
         lineTokenizer.setDelimiter(";");
         lineMapper.setLineTokenizer(lineTokenizer);
@@ -81,7 +74,7 @@ public class BnppfRecordImportBatchConfiguration {
     @Bean
     public Step steps() {
         return stepBuilderFactory.get("steps")
-                .<BnppfRecord, BnppfRecord> chunk(10)
+                .<BnppfRecordEntity, BnppfRecordEntity> chunk(10)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
