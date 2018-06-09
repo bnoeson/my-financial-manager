@@ -18,6 +18,8 @@ import { BnppfRecordDialogComponent } from "./modules/bnppf/components/bnppf-rec
 import {NgxDaterangepickerMd} from "ngx-daterangepicker-material";
 import {FormsModule} from "@angular/forms";
 import {routing} from "./app.routing";
+import { BnppfImportComponent } from './modules/bnppf/pages/bnppf-import/bnppf-import.component';
+import {BnppfRecordFileTableComponent} from "./modules/bnppf/components/bnppf-record-file-table/bnppf-record-file-table.component";
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import {routing} from "./app.routing";
     BnppfRecordTableComponent,
     BnppfRecordChartComponent,
     BnppfRecordDialogComponent,
-    BnppfComponent
+    BnppfComponent,
+    BnppfImportComponent,
+    BnppfRecordFileTableComponent
   ],
   imports: [
     routing,
