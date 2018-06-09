@@ -35,6 +35,10 @@ public class BnppfRecordFileEntity implements Serializable {
     @Column(name = "SIZE")
     private long size;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS")
+    private BnppfRecordFileStatus status;
+
     // default constructor
     public BnppfRecordFileEntity() {
     }
@@ -44,6 +48,7 @@ public class BnppfRecordFileEntity implements Serializable {
         this.setUploadDateTime(builder.uploadDateTime);
         this.setName(builder.name);
         this.setSize(builder.size);
+        this.setStatus(builder.status);
     }
 
     public static class Builder {
@@ -51,6 +56,7 @@ public class BnppfRecordFileEntity implements Serializable {
         private LocalDateTime uploadDateTime = LocalDateTime.now();
         private String name;
         private long size;
+        private BnppfRecordFileStatus status = BnppfRecordFileStatus.READY_TO_PROCESS;
 
         public Builder file(byte[] file){
             this.file = file;
@@ -64,6 +70,11 @@ public class BnppfRecordFileEntity implements Serializable {
 
         public Builder uploadDateTime(LocalDateTime uploadDateTime){
             this.uploadDateTime = uploadDateTime;
+            return this;
+        }
+
+        public Builder status(BnppfRecordFileStatus status){
+            this.status = status;
             return this;
         }
 
@@ -116,5 +127,13 @@ public class BnppfRecordFileEntity implements Serializable {
 
     private void setSize(long size) {
         this.size = size;
+    }
+
+    public BnppfRecordFileStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BnppfRecordFileStatus status) {
+        this.status = status;
     }
 }

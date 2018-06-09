@@ -5,6 +5,7 @@ export class BnppfRecordFileDtoBuilder {
   private _uploadDateTime: Date;
   private _name: string;
   private _size: number;
+  private _status: string;
 
   get id(): number {
     return this._id;
@@ -42,6 +43,15 @@ export class BnppfRecordFileDtoBuilder {
     return this;
   }
 
+  get status(): string {
+    return this._status;
+  }
+
+  withStatus(value: string) {
+    this._status = value;
+    return this;
+  }
+
   build(): BnppfRecordFileDto {
     return new BnppfRecordFileDto(this);
   }
@@ -53,12 +63,14 @@ export class BnppfRecordFileDto {
   private _uploadDateTime: Date;
   private _name: string;
   private _size: number;
+  private _status: string;
 
   constructor(builder: BnppfRecordFileDtoBuilder) {
     this._id = builder.id;
     this._uploadDateTime = builder.uploadDateTime;
     this._name = builder.name;
     this._size = builder.size;
+    this._status = builder.status;
   }
 
   get id(): number {
@@ -91,6 +103,14 @@ export class BnppfRecordFileDto {
 
   set size(value: number) {
     this._size = value;
+  }
+
+  get status(): string {
+    return this._status;
+  }
+
+  set status(value: string) {
+    this._status = value;
   }
 }
 

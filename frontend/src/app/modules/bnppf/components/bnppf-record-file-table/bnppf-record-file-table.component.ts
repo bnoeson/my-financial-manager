@@ -16,7 +16,7 @@ export class BnppfRecordFileTableComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor() {
-    this.columnsToDisplay = ['uploadDateTime', 'name', 'size'];
+    this.columnsToDisplay = ['uploadDateTime', 'name', 'size', 'status'];
   }
 
   ngOnInit() {
