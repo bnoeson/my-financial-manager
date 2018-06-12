@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatTableDataSource, MatSort} from '@angular/material';
 import {BnppfRecordFileDto} from "../../model/BnppfRecordFileDto";
 
@@ -15,8 +15,10 @@ export class BnppfRecordFileTableComponent implements OnInit {
   private dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
+  @Output() onBatchStarted = new EventEmitter<number>();
+
   constructor() {
-    this.columnsToDisplay = ['uploadDateTime', 'name', 'size', 'status'];
+    this.columnsToDisplay = ['uploadDateTime', 'name', 'size', 'status', 'startBatch'];
   }
 
   ngOnInit() {
@@ -28,6 +30,10 @@ export class BnppfRecordFileTableComponent implements OnInit {
       this.files = new Array<BnppfRecordFileDto>(this.file);
       this.dataSource = new MatTableDataSource(this.files);
     }
+  }
+
+  startBatch(recordFileId: number){
+    this.onBatchStarted.emit(recordFileId);
   }
 
 }

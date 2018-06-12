@@ -13,9 +13,9 @@ export class BnppfService {
   private static API_ADDRESS: string = "//localhost:8080/";
   private static BNPPF_RECORDS_API: string = BnppfService.API_ADDRESS + "bnppf-records";
   private static BNPPF_RECORDS_FILES_API: string = BnppfService.API_ADDRESS + "bnppf-records/files";
+  private static BNPPF_RECORDS_FILES_START_BATCH: string = BnppfService.API_ADDRESS + "bnppf-records/files/import";
 
   private allRecordsObs : ReplaySubject<BnppfRecordDto[]> = new ReplaySubject(1);
-  private allRecordFilesObs : Observable<BnppfRecordFileDto[]>;
 
   constructor(private _http: HttpClient) { }
 
@@ -81,6 +81,11 @@ export class BnppfService {
             .build();
         }))
       );
+  }
+
+  startBatch(recordFileId : number) {
+    return this._http.post(
+      BnppfService.BNPPF_RECORDS_FILES_START_BATCH, recordFileId, { responseType: 'text' });
   }
 
 }

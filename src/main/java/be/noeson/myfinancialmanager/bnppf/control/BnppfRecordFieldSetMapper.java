@@ -16,6 +16,11 @@ public class BnppfRecordFieldSetMapper implements FieldSetMapper<BnppfRecordEnti
     @Override
     public BnppfRecordEntity mapFieldSet(FieldSet fieldSet) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN);
+
+        if(fieldSet.toString().equals("[]")){
+            return null; // Empty line
+        }
+
         BnppfRecordEntity.Builder builder = new BnppfRecordEntity.Builder()
                 .sequenceNumber(fieldSet.readString(0))
                 .executionDate(LocalDate.parse(fieldSet.readString(1),formatter))

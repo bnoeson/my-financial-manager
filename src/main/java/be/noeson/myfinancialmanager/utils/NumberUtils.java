@@ -9,6 +9,7 @@ public class NumberUtils {
 
     public static BigDecimal parseCommaSeparatedDecimal(String str){
         try{
+            str = str.replace("+", "");
             BigDecimal bd = new BigDecimal(NumberFormat.getNumberInstance(Locale.FRANCE).parse(str).doubleValue());
             bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
             return bd;

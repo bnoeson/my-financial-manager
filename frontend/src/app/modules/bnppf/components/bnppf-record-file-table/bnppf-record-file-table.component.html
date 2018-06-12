@@ -25,6 +25,11 @@
       <td mat-cell *matCellDef="let file"> {{file.status}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="startBatch">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let file"> <button mat-raised-button (click)="startBatch(file.id)">Start batch</button> </td>
+    </ng-container>
+
   </table>
 
 </div>

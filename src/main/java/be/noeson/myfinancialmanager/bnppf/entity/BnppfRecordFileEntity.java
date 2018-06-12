@@ -133,7 +133,48 @@ public class BnppfRecordFileEntity implements Serializable {
         return status;
     }
 
-    public void setStatus(BnppfRecordFileStatus status) {
+    public Boolean hasStatus(){
+        return this.status != null;
+    }
+
+    private void setStatus(BnppfRecordFileStatus status) {
         this.status = status;
     }
+
+    public void markAsReadyToProcess(){
+        this.setStatus(BnppfRecordFileStatus.READY_TO_PROCESS);
+    }
+
+    public void markAsProcessing(){
+        this.setStatus(BnppfRecordFileStatus.PROCESSING);
+    }
+
+    public void markAsProcessFailed(){
+        this.setStatus(BnppfRecordFileStatus.PROCESS_FAILED);
+    }
+
+    public void markAsProcessed(){
+        this.setStatus(BnppfRecordFileStatus.PROCESSED);
+    }
+
+    @JsonIgnore
+    public Boolean isReadyToProcess(){
+        return this.hasStatus() && this.status.isReadyToProcess();
+    }
+
+    @JsonIgnore
+    public Boolean isProcessing(){
+        return this.hasStatus() && this.status.isProcessing();
+    }
+
+    @JsonIgnore
+    public Boolean isProcessFailed(){
+        return this.hasStatus() && this.status.isProcessFailed();
+    }
+
+    @JsonIgnore
+    public Boolean isProcessed(){
+        return this.hasStatus() && this.status.isProcessed();
+    }
+
 }

@@ -51,4 +51,13 @@ export class BnppfImportComponent implements OnInit {
     );
   }
 
+  startBatch(recordFileId : number){
+    this.bnppfService.startBatch(recordFileId).subscribe(
+      data => {
+        this.updateRecordFilesData();
+      },
+      err => { console.log(err) }
+    );
+  }
+
 }

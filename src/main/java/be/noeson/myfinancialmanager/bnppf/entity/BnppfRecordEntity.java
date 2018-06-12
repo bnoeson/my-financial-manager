@@ -42,7 +42,7 @@ public class BnppfRecordEntity implements Serializable {
     @Column(name = "COUNTERPARTY")
     private String counterparty;
 
-    @Column(name = "DETAILS")
+    @Column(name = "DETAILS", length = 500)
     private String details;
 
     @Column(name = "ACCOUNT_NR")
