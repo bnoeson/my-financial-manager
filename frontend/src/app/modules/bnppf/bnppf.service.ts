@@ -15,41 +15,25 @@ export class BnppfService {
   private static BNPPF_RECORDS_FILES_API: string = BnppfService.API_ADDRESS + "bnppf-records/files";
   private static BNPPF_RECORDS_FILES_START_BATCH: string = BnppfService.API_ADDRESS + "bnppf-records/files/import";
 
-  private allRecordsObs : ReplaySubject<BnppfRecordDto[]> = new ReplaySubject(1);
-
   constructor(private _http: HttpClient) { }
 
-  getAllRecords(forceRefresh?: boolean): Observable<BnppfRecordDto[]> {
-    if (!this.allRecordsObs.observers.length || forceRefresh) {
-      console.log('allRecords REST request');
-      // If the Subject was NOT subscribed before OR if forceRefresh is requested
-      this._http.get<BnppfRecordDto[]>(BnppfService.BNPPF_RECORDS_API)
-        .pipe(
-          map((response: any[]) => response.map((record) => {
-            return new BnppfRecordDtoBuilder()
-              .withId(record.id)
-              .withSequenceNumber(record.sequenceNumber)
-              .withExecutionDate(new Date(record.executionDate))
-              .withValueDate(new Date(record.valueDate))
-              .withAmount(record.amount)
-              .withCurrency(<CurrencyEnum> record.currency)
-              .withCounterparty(record.counterparty)
-              .withDetails(record.details)
-              .withAccountNumber(record.accountNumber)
-              .build();
-          }))
-        )
-        .subscribe(
-        data => {
-          this.allRecordsObs.next(data);
-          },
-        error => {
-          this.allRecordsObs.error(error);
-          this.allRecordsObs = new ReplaySubject(1);
-        });
-    }
-
-    return this.allRecordsObs;
+  getAllRecords(): Observable<BnppfRecordDto[]> {
+    return this._http.get<BnppfRecordDto[]>(BnppfService.BNPPF_RECORDS_API)
+      .pipe(
+        map((response: any[]) => response.map((record) => {
+          return new BnppfRecordDtoBuilder()
+            .withId(record.id)
+            .withSequenceNumber(record.sequenceNumber)
+            .withExecutionDate(new Date(record.executionDate))
+            .withValueDate(new Date(record.valueDate))
+            .withAmount(record.amount)
+            .withCurrency(<CurrencyEnum> record.currency)
+            .withCounterparty(record.counterparty)
+            .withDetails(record.details)
+            .withAccountNumber(record.accountNumber)
+            .build();
+        }))
+      );
   }
 
   getRecord(id: string) {
