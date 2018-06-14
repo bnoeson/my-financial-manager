@@ -36,4 +36,8 @@ export class BnppfRecordFileTableComponent implements OnInit {
     this.onBatchStarted.emit(recordFileId);
   }
 
+  isStartBatchButtonVisible(file : BnppfRecordFileDto){
+    return file.status === BnppfRecordFileStatus.PROCESS_FAILED || file.status === BnppfRecordFileStatus.READY_TO_PROCESS;
+  }
+
 }

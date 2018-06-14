@@ -77,7 +77,7 @@ export class BnppfService {
             .withName(file.name)
             .withSize(file.size)
             .withUploadDateTime(file.uploadDateTime)
-            .withStatus(file.status)
+            .withStatus(<BnppfRecordFileStatus> file.status)
             .build();
         }))
       );

@@ -10,6 +10,8 @@
 
 <button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload()">Upload</button>
 
+<button class="btn btn-success" (click)="updateRecordFilesData()">Refresh</button>
+
 <div *ngIf='allRecordFiles'> <!-- postpone initialization to wait for rest call success -->
   <bnppf-record-file-table [files]="allRecordFiles" (onBatchStarted)="startBatch($event)"></bnppf-record-file-table>
 </div>
