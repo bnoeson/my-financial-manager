@@ -39,6 +39,9 @@ public class BnppfRecordImportBatchConfiguration {
     @Autowired
     private BnppfRecordFileService bnppfRecordFileService;
 
+    @Autowired
+    private BnppfRecordService bnppfRecordService;
+
     public final static String RECORD_FILE_ID_PARAMETER_KEY = "recordFileId";
 
     @Bean
@@ -69,7 +72,7 @@ public class BnppfRecordImportBatchConfiguration {
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
         lineTokenizer.setDelimiter(";");
         lineMapper.setLineTokenizer(lineTokenizer);
-        lineMapper.setFieldSetMapper(new BnppfRecordFieldSetMapper());
+        lineMapper.setFieldSetMapper(new BnppfRecordFieldSetMapper(bnppfRecordService));
 
         reader.setLineMapper(lineMapper);
         reader.setLinesToSkip(1);
@@ -109,6 +112,8 @@ public class BnppfRecordImportBatchConfiguration {
                 .reader(reader(OVERRIDDEN_BY_EXPRESSION))
                 .processor(processor())
                 .writer(writer())
+                .faultTolerant()
+                .skipPolicy(new BnppfRecordImportBatchSkipPolicy())
                 .build();
     }
 }

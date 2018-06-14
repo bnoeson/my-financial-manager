@@ -1,6 +1,8 @@
 package be.noeson.myfinancialmanager.bnppf.control;
 
 import be.noeson.myfinancialmanager.bnppf.entity.BnppfRecordEntity;
+import be.noeson.myfinancialmanager.commons.exception.DuplicateRecordFoundException;
+import be.noeson.myfinancialmanager.commons.exception.EmptyLineFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,9 +53,12 @@ public class BnppfRecordEntityFieldSetMapperUnitTest {
     private String accountNumberIn = "BE987654321";
     private String accountNumberOut = "BE987654321";
 
+    @Mock
+    private BnppfRecordService bnppfRecordService;
+
     @Before
     public void init(){
-        testObject = new BnppfRecordFieldSetMapper();
+        testObject = new BnppfRecordFieldSetMapper(bnppfRecordService);
 
         Mockito.when(fieldSet.readString(0)).thenReturn(sequenceNumberIn);
         Mockito.when(fieldSet.readString(1)).thenReturn(executionDateIn);
@@ -100,11 +105,33 @@ public class BnppfRecordEntityFieldSetMapperUnitTest {
     }
 
     @Test
-    public void mapFieldSet_Test_When_FieldCount_Is_Not_7_Nor_8(){
+    public void mapFieldSet_Test_When_EmptyLine_Then_ThrowException(){
+        Mockito.when(fieldSet.toString()).thenReturn("[]");
+
+        expectedEx.expect(EmptyLineFoundException.class);
+
+        testObject.mapFieldSet(fieldSet);
+    }
+
+    @Test
+    public void mapFieldSet_Test_When_FieldCount_Is_Not_7_Nor_8_Then_ThrowException(){
         Mockito.when(fieldSet.getFieldCount()).thenReturn(6);
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Record version not implemented : there should be 7 or 8 columns");
+
+        testObject.mapFieldSet(fieldSet);
+    }
+
+    @Test
+    public void mapFieldSet_Test_When_DuplicateFound_Then_ThrowException(){
+        Mockito.when(fieldSet.readString(5)).thenReturn(detailsIn);
+        Mockito.when(fieldSet.readString(6)).thenReturn(accountNumberIn);
+        Mockito.when(fieldSet.getFieldCount()).thenReturn(7);
+
+        Mockito.when(bnppfRecordService.areDuplicateRecordsPresent(Mockito.any(BnppfRecordEntity.class))).thenReturn(true);
+
+        expectedEx.expect(DuplicateRecordFoundException.class);
 
         testObject.mapFieldSet(fieldSet);
     }

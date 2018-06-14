@@ -14,14 +14,14 @@ import static be.noeson.myfinancialmanager.bnppf.control.BnppfRecordImportBatchC
 @Component
 public class BnppfRecordImportJobListener extends JobExecutionListenerSupport {
 
-	private static final Logger log = LoggerFactory.getLogger(BnppfRecordImportJobListener.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BnppfRecordImportJobListener.class);
 
 	@Autowired
 	private BnppfRecordFileService bnppfRecordFileService;
 
 	@Override
 	public void beforeJob(JobExecution jobExecution) {
-		log.info("Job started");
+		LOG.info("Job started");
 	}
 
 	@Override
@@ -29,8 +29,8 @@ public class BnppfRecordImportJobListener extends JobExecutionListenerSupport {
 
 		Long recordFileId = jobExecution.getJobParameters().getLong(RECORD_FILE_ID_PARAMETER_KEY);
 
-		log.info("Job terminated with status "+jobExecution.getStatus().toString());
-		log.info("Details : "+jobExecution.toString());
+		LOG.info("Job terminated with status "+jobExecution.getStatus().toString());
+		LOG.info("Details : "+jobExecution.toString());
 
 		BnppfRecordFileEntity file = bnppfRecordFileService.findById(recordFileId);
 		if(BatchStatus.COMPLETED.equals(jobExecution.getStatus())){
