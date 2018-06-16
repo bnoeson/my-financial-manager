@@ -51,6 +51,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
           responsive: true,
           data: {
             datasets: [{
+              steppedLine: true,
               label: 'Balance history',
               data: this.completeBalanceHistory,
               borderWidth: 1
