@@ -44,14 +44,14 @@ public class BnppfRecordFieldSetMapper implements FieldSetMapper<BnppfRecordEnti
         if(fieldSet.getFieldCount() == 7){
             record = builder
                 .details(fieldSet.readString(5))
-                .accountNumber(fieldSet.readString(6))
+                .accountNumber(fieldSet.readString(6).replaceAll("\\s+",""))
                 .build();
         }
         else if (fieldSet.getFieldCount() == 8){
             record = builder
                 .counterparty(fieldSet.readString(5))
                 .details(fieldSet.readString(6))
-                .accountNumber(fieldSet.readString(7))
+                .accountNumber(fieldSet.readString(7).replaceAll("\\s+",""))
                 .build();
         }
         else {
