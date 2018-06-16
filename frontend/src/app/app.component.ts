@@ -1,7 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {MatTableDataSource} from "@angular/material";
-import {BnppfService} from "./modules/bnppf/bnppf.service";
-import {BnppfRecordDto} from "./modules/bnppf/model/BnppfRecordDto";
 
 @Component({
   selector: 'app-root',
@@ -12,6 +9,10 @@ export class AppComponent implements OnInit {
   private title = 'app';
 
   ngOnInit(){
+  }
+
+  getToolbarHeight() : number {
+    return document.getElementsByClassName("mat-toolbar")[0].clientHeight;
   }
 
 }

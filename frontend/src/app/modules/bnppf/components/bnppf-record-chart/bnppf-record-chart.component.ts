@@ -4,6 +4,7 @@ import {BnppfService} from "../../bnppf.service";
 import {BnppfRecordDto} from "../../model/BnppfRecordDto";
 import {MatDialog} from "@angular/material";
 import {BnppfRecordDialogComponent} from "../bnppf-record-dialog/bnppf-record-dialog.component";
+import {AppComponent} from "../../../../app.component";
 
 @Component({
   selector: 'bnppf-record-chart',
@@ -25,10 +26,10 @@ export class BnppfRecordChartComponent implements AfterViewInit {
   };
 
   private chart: Chart;
-  private completeBalanceHistory: ChartData[]; // TODO use dto for chart data
+  private completeBalanceHistory: ChartData[];
   private currentBalanceHistory: ChartData[];
 
-  constructor(private bnppfService : BnppfService, public dialog: MatDialog) { }
+  constructor(private bnppfService : BnppfService, public dialog: MatDialog, public appComponent : AppComponent) { }
 
   ngAfterViewInit() {
     let self = this;
@@ -41,8 +42,13 @@ export class BnppfRecordChartComponent implements AfterViewInit {
 
         let canvas = <HTMLCanvasElement> document.getElementById("bnppfRecordChart");
         let ctx = canvas.getContext("2d");
+
+        ctx.canvas.width  = window.innerWidth;
+        ctx.canvas.height = window.innerHeight - this.appComponent.getToolbarHeight() - document.getElementById("chartButtons").offsetHeight;
+
         this.chart = new Chart(ctx, {
           type: 'line',
+          responsive: true,
           data: {
             datasets: [{
               label: 'Balance history',
@@ -59,13 +65,7 @@ export class BnppfRecordChartComponent implements AfterViewInit {
                 }
               }],
               xAxes: [{
-                type: 'time',
-                time: {
-                  unit: 'day',
-                  displayFormats: {
-                    quarter: 'MMM YYYY'
-                  }
-                }
+                type: 'time'
               }]
             },
             // TOOLTIPS
@@ -87,6 +87,15 @@ export class BnppfRecordChartComponent implements AfterViewInit {
               if(element.length > 0) {
                 let ind = element[0]._index;
                 self.openDialog(self.currentBalanceHistory[ind].record);
+              }
+            },
+            // LAYOUT
+            layout: {
+              padding: {
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: 20
               }
             }
           }

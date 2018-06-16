@@ -1,5 +1,4 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {BnppfService} from "../../bnppf.service";
 import {MatTableDataSource, MatSort} from '@angular/material';
 import {BnppfRecordDto} from "../../model/BnppfRecordDto";
 
