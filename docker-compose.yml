@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  myfindb:
+    image: mysql
+    container_name: myfindb
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=myfinancialmanager
+      - MYSQL_PASSWORD=root
+  myfinancialmanager:
+    build: ./
+    image: bnoeson/myfinancialmanager
+    container_name: myfinancialmanager
+    depends_on:
+      - myfindb
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=myfindb
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=myfinancialmanager
+      - DATABASE_PORT=3306

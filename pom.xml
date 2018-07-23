@@ -6,7 +6,7 @@
 	<groupId>be.noeson</groupId>
 	<artifactId>myfinancialmanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>myfinancialmanager</name>
 	<description>Demo project for Spring Boot</description>
@@ -19,9 +19,18 @@
 	</parent>
 
 	<properties>
+		<!-- Build properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<node.version>v8.11.3</node.version>
+		<npm.version>5.6.0</npm.version>
+		<docker.accountName>bnoeson</docker.accountName>
+
+		<!-- Plugin versions -->
+		<maven-war-plugin.version>2.6</maven-war-plugin.version>
+		<frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+		<dockerfile-maven-version>1.4.3</dockerfile-maven-version>
 	</properties>
 
 	<dependencies>
@@ -74,9 +83,117 @@
 
 	<build>
 		<plugins>
+			<!-- War creation -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${maven-war-plugin.version}</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<webResources>
+						<resource>
+							<directory>frontend/dist/</directory>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- Frontend integration -->
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>${frontend-maven-plugin.version}</version>
+				<configuration>
+					<workingDirectory>frontend/</workingDirectory>
+					<installDirectory>frontend/</installDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>${node.version}</nodeVersion>
+							<npmVersion>${npm.version}</npmVersion>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>npm run-script prod</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>run-script build</arguments> <!-- TODO add build-prod -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+				<executions>
+					<!-- docker : remove existing image -->
+					<execution>
+						<id>docker-clean</id>
+						<phase>install</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<workingDirectory></workingDirectory>
+							<executable>docker</executable>
+							<arguments>
+								<argument>rmi</argument>
+								<argument>-f</argument>
+								<argument>${docker.accountName}/${artifactId}</argument>
+							</arguments>
+							<successCodes>
+								<successCode>0</successCode>
+								<successCode>1</successCode>
+							</successCodes>
+						</configuration>
+					</execution>
+
+					<!-- docker : build new image -->
+					<execution>
+						<id>docker-build</id>
+						<phase>install</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<workingDirectory></workingDirectory>
+							<executable>docker</executable>
+							<arguments>
+								<argument>build</argument>
+								<argument>-t</argument>
+								<argument>${docker.accountName}/${artifactId}</argument>
+								<argument>.</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!--QC-->
@@ -87,6 +204,86 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
+	<profiles>
+		<profile>
+			<id>hot-deploy</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.6.0</version>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<configuration>
+							<executable>true</executable>
+						</configuration>
+						<executions>
+							<execution>
+								<id>remove</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>docker</executable>
+									<workingDirectory></workingDirectory>
+									<arguments>
+										<argument>exec</argument>
+										<argument>${project.artifactId}</argument>
+										<argument>rm</argument>
+										<argument>-rf</argument>
+										<argument>/app.war</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>docker</executable>
+									<workingDirectory></workingDirectory>
+									<arguments>
+										<argument>cp</argument>
+										<argument>
+											${project.basedir}/target/${project.artifactId}-${project.version}.war
+										</argument>
+										<argument>${project.artifactId}:/app.war</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>restart</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>docker</executable>
+									<workingDirectory></workingDirectory>
+									<arguments>
+										<argument>restart</argument>
+										<argument>${project.artifactId}</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+
 
 
 </project>

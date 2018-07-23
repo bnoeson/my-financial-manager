@@ -8,4 +8,4 @@ const appRoutes: Routes = [
   { path: 'bnppf/import', component: BnppfImportComponent }
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes, { useHash: true });
