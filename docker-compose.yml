@@ -5,7 +5,7 @@ services:
     image: mysql
     container_name: myfindb
     ports:
-      - "3306:3306"
+      - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=myfinancialmanager
@@ -24,3 +24,11 @@ services:
       - DATABASE_PASSWORD=root
       - DATABASE_NAME=myfinancialmanager
       - DATABASE_PORT=3306
+  myfinwebapp:
+    build: ./frontend/
+    image: bnoeson/myfinwebapp
+    container_name: myfinwebapp
+    depends_on:
+      - myfinancialmanager
+    ports:
+      - 3000:80

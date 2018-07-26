@@ -6,7 +6,7 @@
 	<groupId>be.noeson</groupId>
 	<artifactId>myfinancialmanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>myfinancialmanager</name>
 	<description>Demo project for Spring Boot</description>
@@ -25,11 +25,14 @@
 		<java.version>1.8</java.version>
 		<node.version>v8.11.3</node.version>
 		<npm.version>5.6.0</npm.version>
-		<docker.accountName>bnoeson</docker.accountName>
 
 		<!-- Plugin versions -->
-		<maven-war-plugin.version>2.6</maven-war-plugin.version>
 		<frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+
+		<!-- Docker -->
+		<docker.account.name>bnoeson</docker.account.name>
+		<docker.backend.name>myfinancialmanager</docker.backend.name>
+		<docker.frontend.name>myfinwebapp</docker.frontend.name>
 		<dockerfile-maven-version>1.4.3</dockerfile-maven-version>
 	</properties>
 
@@ -83,24 +86,11 @@
 
 	<build>
 		<plugins>
-			<!-- War creation -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>${maven-war-plugin.version}</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<webResources>
-						<resource>
-							<directory>frontend/dist/</directory>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
 			<!-- Frontend integration -->
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
@@ -145,57 +135,6 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.6.0</version>
-				<configuration>
-					<executable>true</executable>
-				</configuration>
-				<executions>
-					<!-- docker : remove existing image -->
-					<execution>
-						<id>docker-clean</id>
-						<phase>install</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<workingDirectory></workingDirectory>
-							<executable>docker</executable>
-							<arguments>
-								<argument>rmi</argument>
-								<argument>-f</argument>
-								<argument>${docker.accountName}/${artifactId}</argument>
-							</arguments>
-							<successCodes>
-								<successCode>0</successCode>
-								<successCode>1</successCode>
-							</successCodes>
-						</configuration>
-					</execution>
-
-					<!-- docker : build new image -->
-					<execution>
-						<id>docker-build</id>
-						<phase>install</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<workingDirectory></workingDirectory>
-							<executable>docker</executable>
-							<arguments>
-								<argument>build</argument>
-								<argument>-t</argument>
-								<argument>${docker.accountName}/${artifactId}</argument>
-								<argument>.</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 			<!--QC-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -208,7 +147,85 @@
 
 	<profiles>
 		<profile>
-			<id>hot-deploy</id>
+			<id>build-images</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.6.0</version>
+						<configuration>
+							<executable>true</executable>
+						</configuration>
+						<executions>
+							<!-- docker : remove existing image -->
+							<execution>
+								<id>docker-clean</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<workingDirectory></workingDirectory>
+									<executable>docker</executable>
+									<arguments>
+										<argument>rmi</argument>
+										<argument>-f</argument>
+										<argument>${docker.account.name}/${docker.backend.name}</argument>
+										<argument>${docker.account.name}/${docker.frontend.name}</argument>
+									</arguments>
+									<successCodes>
+										<successCode>0</successCode>
+										<successCode>1</successCode>
+									</successCodes>
+								</configuration>
+							</execution>
+
+							<!-- docker : build new image -->
+							<execution>
+								<id>docker-build-backend</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<workingDirectory></workingDirectory>
+									<executable>docker</executable>
+									<arguments>
+										<argument>build</argument>
+										<argument>-t</argument>
+										<argument>${docker.account.name}/${docker.backend.name}</argument>
+										<argument>.</argument>
+									</arguments>
+								</configuration>
+							</execution>
+
+							<!-- docker : build new image -->
+							<execution>
+								<id>docker-build-frontend</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<workingDirectory>frontend</workingDirectory>
+									<executable>docker</executable>
+									<arguments>
+										<argument>build</argument>
+										<argument>-t</argument>
+										<argument>${docker.account.name}/${docker.frontend.name}</argument>
+										<argument>.</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>backend-hot-deploy</id>
 			<dependencies>
 				<dependency>
 					<groupId>org.codehaus.mojo</groupId>
@@ -239,7 +256,7 @@
 										<argument>${project.artifactId}</argument>
 										<argument>rm</argument>
 										<argument>-rf</argument>
-										<argument>/app.war</argument>
+										<argument>/app.jar</argument>
 									</arguments>
 								</configuration>
 							</execution>
@@ -255,9 +272,9 @@
 									<arguments>
 										<argument>cp</argument>
 										<argument>
-											${project.basedir}/target/${project.artifactId}-${project.version}.war
+											${project.basedir}/target/${project.artifactId}-${project.version}.jar
 										</argument>
-										<argument>${project.artifactId}:/app.war</argument>
+										<argument>${project.artifactId}:/app.jar</argument>
 									</arguments>
 								</configuration>
 							</execution>
@@ -281,6 +298,7 @@
 				</plugins>
 			</build>
 		</profile>
+
 	</profiles>
 
 

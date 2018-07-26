@@ -10,15 +10,26 @@ import {BnppfRecordFileDto, BnppfRecordFileDtoBuilder} from "./model/BnppfRecord
 })
 export class BnppfService {
 
-  private static API_ADDRESS: string = "//localhost:8080/";
-  private static BNPPF_RECORDS_API: string = BnppfService.API_ADDRESS + "bnppf-records";
-  private static BNPPF_RECORDS_FILES_API: string = BnppfService.API_ADDRESS + "bnppf-records/files";
-  private static BNPPF_RECORDS_FILES_START_BATCH: string = BnppfService.API_ADDRESS + "bnppf-records/files/import";
+  private static readonly API_PORT : string = "8080";
+  private static readonly BNPPF_RECORDS_API : string = "/bnppf-records";
+  private static readonly BNPPF_RECORDS_FILES_API : string = "/bnppf-records/files";
+  private static readonly BNPPF_RECORDS_FILES_START_BATCH : string = "/bnppf-records/files/import";
 
-  constructor(private _http: HttpClient) { }
+  private readonly hostname : string;
+  private readonly apiUrl : string;
+
+  constructor(private _http: HttpClient) {
+
+    this.hostname = location.host;
+    if (this.hostname.indexOf(':') > 0) {
+      this.hostname = this.hostname.substr(0, this.hostname.indexOf(':') + 1);
+    }
+    this.apiUrl = "http://" + this.hostname + BnppfService.API_PORT;
+
+  }
 
   getAllRecords(): Observable<BnppfRecordDto[]> {
-    return this._http.get<BnppfRecordDto[]>(BnppfService.BNPPF_RECORDS_API)
+    return this._http.get<BnppfRecordDto[]>(this.apiUrl + BnppfService.BNPPF_RECORDS_API)
       .pipe(
         map((response: any[]) => response.map((record) => {
           return new BnppfRecordDtoBuilder()
@@ -37,7 +48,7 @@ export class BnppfService {
   }
 
   getRecord(id: string) {
-    return this._http.get(BnppfService.BNPPF_RECORDS_API + '/' + id);
+    return this._http.get(this.apiUrl + BnppfService.BNPPF_RECORDS_API + '/' + id);
   }
 
   pushFileToStorage(file: File): Observable<HttpEvent<{}>> {
@@ -45,7 +56,7 @@ export class BnppfService {
 
     formdata.append('file', file);
 
-    const req = new HttpRequest('POST', BnppfService.BNPPF_RECORDS_FILES_API, formdata, {
+    const req = new HttpRequest('POST', this.apiUrl + BnppfService.BNPPF_RECORDS_FILES_API, formdata, {
       reportProgress: true,
       responseType: 'text'
     });
@@ -53,7 +64,7 @@ export class BnppfService {
   }
 
   getAllRecordFiles(): Observable<BnppfRecordFileDto[]> {
-    return this._http.get<BnppfRecordDto[]>(BnppfService.BNPPF_RECORDS_FILES_API)
+    return this._http.get<BnppfRecordDto[]>(this.apiUrl + BnppfService.BNPPF_RECORDS_FILES_API)
       .pipe(
         map((response: any[]) => response.map((file) => {
           return new BnppfRecordFileDtoBuilder()
@@ -69,7 +80,7 @@ export class BnppfService {
 
   startBatch(recordFileId : number) {
     return this._http.post(
-      BnppfService.BNPPF_RECORDS_FILES_START_BATCH, recordFileId, { responseType: 'text' });
+      this.apiUrl + BnppfService.BNPPF_RECORDS_FILES_START_BATCH, recordFileId, { responseType: 'text' });
   }
 
 }
