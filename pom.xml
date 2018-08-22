@@ -91,50 +91,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<!-- Frontend integration -->
-			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<version>${frontend-maven-plugin.version}</version>
-				<configuration>
-					<workingDirectory>frontend/</workingDirectory>
-					<installDirectory>frontend/</installDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<id>install node and npm</id>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<configuration>
-							<nodeVersion>${node.version}</nodeVersion>
-							<npmVersion>${npm.version}</npmVersion>
-						</configuration>
-					</execution>
-
-					<execution>
-						<id>npm install</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>install</arguments>
-						</configuration>
-					</execution>
-
-					<execution>
-						<id>npm run-script prod</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>run-script build</arguments> <!-- TODO add build-prod -->
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 			<!--QC-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -253,7 +209,7 @@
 									<workingDirectory></workingDirectory>
 									<arguments>
 										<argument>exec</argument>
-										<argument>${project.artifactId}</argument>
+										<argument>${docker.backend.name}</argument>
 										<argument>rm</argument>
 										<argument>-rf</argument>
 										<argument>/app.jar</argument>
@@ -274,7 +230,7 @@
 										<argument>
 											${project.basedir}/target/${project.artifactId}-${project.version}.jar
 										</argument>
-										<argument>${project.artifactId}:/app.jar</argument>
+										<argument>${docker.backend.name}:/app.jar</argument>
 									</arguments>
 								</configuration>
 							</execution>
@@ -300,8 +256,5 @@
 		</profile>
 
 	</profiles>
-
-
-
 
 </project>
