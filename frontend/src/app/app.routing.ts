@@ -1,11 +1,11 @@
 import {ModuleWithProviders} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {BnppfComponent} from "./modules/bnppf/pages/bnppf/bnppf.component";
-import {BnppfImportComponent} from "./modules/bnppf/pages/bnppf-import/bnppf-import.component";
+import {BalanceChartPage} from "./modules/banking/pages/balance-chart/balance-chart.page";
+import {TransactionFilePage} from "./modules/banking/pages/transaction-file/transaction-file.page";
 
 const appRoutes: Routes = [
-  { path: 'bnppf', component: BnppfComponent },
-  { path: 'bnppf/import', component: BnppfImportComponent }
+  { path: 'balance', component: BalanceChartPage },
+  { path: 'transaction-file', component: TransactionFilePage }
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);

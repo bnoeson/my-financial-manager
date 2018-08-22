@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 
-import { BnppfService } from './modules/bnppf/bnppf.service';
-import { BnppfRecordTableComponent } from './modules/bnppf/components/bnppf-record-table/bnppf-record-table.component';
-import { BnppfComponent } from './modules/bnppf/pages/bnppf/bnppf.component';
+import { TransactionService } from './modules/banking/transaction.service';
+import { TransactionTableComponent } from './modules/banking/components/transaction-table/transaction-table.component';
+import { BalanceChartPage } from './modules/banking/pages/balance-chart/balance-chart.page';
 
 // Angular Material
 import {
@@ -13,23 +13,23 @@ import {
   MatSortModule, MatDialogModule, MatSidenavModule, MatIconModule
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BnppfRecordChartComponent } from './modules/bnppf/components/bnppf-record-chart/bnppf-record-chart.component';
-import { BnppfRecordDialogComponent } from "./modules/bnppf/components/bnppf-record-dialog/bnppf-record-dialog.component";
+import { BalanceChartComponent } from './modules/banking/components/balance-chart/balance-chart.component';
+import { TransactionDialogComponent } from "./modules/banking/components/transaction-dialog/transaction-dialog.component";
 import {NgxDaterangepickerMd} from "ngx-daterangepicker-material";
 import {FormsModule} from "@angular/forms";
 import {routing} from "./app.routing";
-import { BnppfImportComponent } from './modules/bnppf/pages/bnppf-import/bnppf-import.component';
-import {BnppfRecordFileTableComponent} from "./modules/bnppf/components/bnppf-record-file-table/bnppf-record-file-table.component";
+import { TransactionFilePage } from './modules/banking/pages/transaction-file/transaction-file.page';
+import {TransactionFileTableComponent} from "./modules/banking/components/transaction-file-table/transaction-file-table.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    BnppfRecordTableComponent,
-    BnppfRecordChartComponent,
-    BnppfRecordDialogComponent,
-    BnppfComponent,
-    BnppfImportComponent,
-    BnppfRecordFileTableComponent
+    TransactionTableComponent,
+    BalanceChartComponent,
+    TransactionDialogComponent,
+    BalanceChartPage,
+    TransactionFilePage,
+    TransactionFileTableComponent
   ],
   imports: [
     routing,
@@ -49,8 +49,8 @@ import {BnppfRecordFileTableComponent} from "./modules/bnppf/components/bnppf-re
     NgxDaterangepickerMd,
     FormsModule
   ],
-  providers: [BnppfService],
+  providers: [TransactionService],
   bootstrap: [AppComponent],
-  entryComponents: [BnppfRecordDialogComponent]
+  entryComponents: [TransactionDialogComponent]
 })
 export class AppModule { }
