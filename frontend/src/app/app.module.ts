@@ -22,6 +22,7 @@ import { TransactionFilePage } from './modules/banking/pages/transaction-file/tr
 import {TransactionFileTableComponent} from "./modules/banking/components/transaction-file-table/transaction-file-table.component";
 
 import {ApiUrlInterceptor} from "./shared/ApiUrlInterceptor";
+import {TransactionFileService} from "./modules/banking/transaction-file.service";
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import {ApiUrlInterceptor} from "./shared/ApiUrlInterceptor";
   ],
   providers: [
     TransactionService,
+    TransactionFileService,
     {provide: HTTP_INTERCEPTORS, useClass: ApiUrlInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],

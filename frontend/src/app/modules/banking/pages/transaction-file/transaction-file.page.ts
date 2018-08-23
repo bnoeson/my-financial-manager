@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {TransactionService} from "../../transaction.service";
 import {HttpEventType, HttpResponse} from "@angular/common/http";
 import {TransactionFileDto} from "../../model/TransactionFileDto";
+import {TransactionFileService} from "../../transaction-file.service";
 
 @Component({
   selector: 'transaction-file-page',
@@ -15,7 +15,7 @@ export class TransactionFilePage implements OnInit {
   private progress: { percentage: number } = { percentage: 0 };
   private allTransactionFiles: TransactionFileDto[];
 
-  constructor(private transactionService: TransactionService) { }
+  constructor(private transactionFileService: TransactionFileService) { }
 
   ngOnInit() {
     this.updateTransactionFilesData();
@@ -29,7 +29,7 @@ export class TransactionFilePage implements OnInit {
     this.progress.percentage = 0;
 
     this.currentFileUpload = this.selectedFiles.item(0);
-    this.transactionService.pushFileToStorage(this.currentFileUpload).subscribe(event => {
+    this.transactionFileService.pushFileToStorage(this.currentFileUpload).subscribe(event => {
       if (event.type === HttpEventType.UploadProgress) {
         this.progress.percentage = Math.round(100 * event.loaded / event.total);
       } else if (event instanceof HttpResponse) {
@@ -43,7 +43,7 @@ export class TransactionFilePage implements OnInit {
 
   updateTransactionFilesData () {
     this.allTransactionFiles = null;
-    this.transactionService.getAllTransactionFiles().subscribe(data => {
+    this.transactionFileService.getAllTransactionFiles().subscribe(data => {
         this.allTransactionFiles = data;
       },
       // handle the error, otherwise will break the Observable
@@ -52,7 +52,7 @@ export class TransactionFilePage implements OnInit {
   }
 
   startBatch(transactionFileId : number){
-    this.transactionService.startBatch(transactionFileId).subscribe(
+    this.transactionFileService.startBatch(transactionFileId).subscribe(
       data => {
         this.updateTransactionFilesData();
       },
