@@ -11,10 +11,10 @@ export class TransactionService {
 
   constructor(private _http: HttpClient) {}
 
-  getAll(): Observable<TransactionDto[]> {
-    return this._http.get<TransactionDto[]>(ApiUrls.TRANSACTIONS_API)
+  getAll(): Observable< Array<TransactionDto> > {
+    return this._http.get<Array<TransactionDto>>(ApiUrls.TRANSACTIONS_API)
       .pipe(
-        map((response: any[]) =>
+        map((response: Array<any>) =>
           response.map((resp) => {
             return new TransactionDtoBuilder()
               .withId(resp.id)

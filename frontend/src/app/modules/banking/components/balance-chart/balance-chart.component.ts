@@ -27,8 +27,8 @@ export class BalanceChartComponent implements AfterViewInit {
   };
 
   private chart: Chart;
-  private completeBalanceHistory: BalanceChartData[];
-  private currentBalanceHistory: BalanceChartData[];
+  private completeBalanceHistory: Array<BalanceChartData>;
+  private currentBalanceHistory: Array<BalanceChartData>;
 
   constructor(public dialog: MatDialog, public appComponent : AppComponent) { }
 
@@ -101,8 +101,8 @@ export class BalanceChartComponent implements AfterViewInit {
     });
   }
 
-  private getCompleteBalanceHistory(transactionDtos:TransactionDto[]): BalanceChartData[] {
-    let balanceHistory: BalanceChartData[] = [];
+  private getCompleteBalanceHistory(transactionDtos:Array<TransactionDto>): Array<BalanceChartData> {
+    let balanceHistory: Array<BalanceChartData> = [];
     let balance = 0;
     this.sortByExecutionDate(transactionDtos).forEach(r => {
         balance += r.amount;
@@ -114,7 +114,7 @@ export class BalanceChartComponent implements AfterViewInit {
     return balanceHistory;
   }
 
-  private sortByExecutionDate(data: TransactionDto[]){
+  private sortByExecutionDate(data: Array<TransactionDto>){
     data.sort(function (a,b) {
       if (a.executionDate < b.executionDate)
         return -1;

@@ -12,10 +12,10 @@ export class TransactionFileService {
 
   constructor(private _http: HttpClient) { }
 
-  getAllTransactionFiles(): Observable<TransactionFileDto[]> {
-    return this._http.get<TransactionDto[]>(ApiUrls.TRANSACTIONS_FILES_API)
+  getAllTransactionFiles(): Observable< Array<TransactionFileDto> > {
+    return this._http.get<Array<TransactionDto>>(ApiUrls.TRANSACTIONS_FILES_API)
       .pipe(
-        map((response: any[]) => response.map((resp) => {
+        map((response: Array<any>) => response.map((resp) => {
           return new TransactionFileDtoBuilder()
             .withId(resp.id)
             .withName(resp.name)

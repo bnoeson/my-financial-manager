@@ -13,7 +13,7 @@ export class TransactionFilePage implements OnInit {
   private selectedFiles: FileList;
   private currentFileUpload: File;
   private progress: { percentage: number } = { percentage: 0 };
-  private allTransactionFiles: TransactionFileDto[];
+  private allTransactionFiles: Array<TransactionFileDto>;
 
   constructor(private transactionFileService: TransactionFileService) { }
 
