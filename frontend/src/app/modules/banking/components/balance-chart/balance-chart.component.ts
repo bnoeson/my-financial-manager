@@ -1,11 +1,9 @@
-import { AfterViewInit, Component } from '@angular/core';
+import {AfterViewInit, Component, Input} from '@angular/core';
 import { Chart } from 'chart.js';
-import { TransactionService } from "../../transaction.service";
 import { TransactionDto } from "../../model/TransactionDto";
 import { MatDialog } from "@angular/material";
 import { TransactionDialogComponent } from "../transaction-dialog/transaction-dialog.component";
 import { AppComponent } from "../../../../app.component";
-import { map } from "rxjs/operators";
 
 @Component({
   selector: 'balance-chart',
@@ -13,6 +11,8 @@ import { map } from "rxjs/operators";
   styleUrls: ['./balance-chart.component.css']
 })
 export class BalanceChartComponent implements AfterViewInit {
+
+  @Input() transactionDtos: Array<TransactionDto>;
 
   // use that DATE-RANGE-PICKER (https://github.com/fetrarij/ngx-daterangepicker-material), waiting for this functionality in angular material
   // see issue : https://github.com/fetrarij/ngx-daterangepicker-material
@@ -30,88 +30,78 @@ export class BalanceChartComponent implements AfterViewInit {
   private completeBalanceHistory: BalanceChartData[];
   private currentBalanceHistory: BalanceChartData[];
 
-  constructor(private transactionService : TransactionService, public dialog: MatDialog, public appComponent : AppComponent) { }
+  constructor(public dialog: MatDialog, public appComponent : AppComponent) { }
 
   ngAfterViewInit() {
     let self = this;
-    this.transactionService.getAll()
-      .pipe(
-        map<TransactionDto[], BalanceChartData[]>( (transactionDtos: TransactionDto[]) => this.getCompleteBalanceHistory(transactionDtos) )
-      )
-      .subscribe( (balanceHistory: BalanceChartData[]) => {
 
-        this.completeBalanceHistory = balanceHistory;
-        this.currentBalanceHistory = this.completeBalanceHistory;
+    this.completeBalanceHistory = this.getCompleteBalanceHistory(this.transactionDtos);
+    this.currentBalanceHistory = this.completeBalanceHistory;
 
-        let canvas = <HTMLCanvasElement> document.getElementById("balanceChart");
-        let ctx = canvas.getContext("2d");
+    let canvas = <HTMLCanvasElement> document.getElementById("balanceChart");
+    let ctx = canvas.getContext("2d");
 
-        ctx.canvas.width  = window.innerWidth;
-        ctx.canvas.height = window.innerHeight - this.appComponent.getToolbarHeight() - document.getElementById("chartButtons").offsetHeight;
+    ctx.canvas.width  = window.innerWidth;
+    ctx.canvas.height = window.innerHeight - this.appComponent.getToolbarHeight() - document.getElementById("chartButtons").offsetHeight;
 
-        this.chart = new Chart(ctx, {
-          type: 'line',
-          responsive: true,
-          data: {
-            datasets: [{
-              steppedLine: true,
-              label: 'Balance history',
-              data: this.completeBalanceHistory,
-              borderWidth: 1
-            }]
-          },
-          options: {
-            // SCALES - AXES
-            scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero:true
-                }
-              }],
-              xAxes: [{
-                type: 'time'
-              }]
+    this.chart = new Chart(ctx, {
+      type: 'line',
+      responsive: true,
+      data: {
+        datasets: [{
+          steppedLine: true,
+          label: 'Balance history',
+          data: this.completeBalanceHistory,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        // SCALES - AXES
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero:true
+            }
+          }],
+          xAxes: [{
+            type: 'time'
+          }]
+        },
+        // TOOLTIPS
+        tooltips: {
+          callbacks: {
+            title: function(tooltipItem, data) {
+              return data['datasets'][0]['data'][tooltipItem[0]['index']].t;
             },
-            // TOOLTIPS
-            tooltips: {
-              callbacks: {
-                title: function(tooltipItem, data) {
-                  return data['datasets'][0]['data'][tooltipItem[0]['index']].t;
-                },
-                label: function(tooltipItem, data) {
-                  return data['datasets'][0]['data'][tooltipItem['index']].y;
-                },
-                afterBody: function(tooltipItem, data) {
-                  return 'Change : '+data['datasets'][0]['data'][tooltipItem[0]['index']].amount;
-                }
-              }
+            label: function(tooltipItem, data) {
+              return data['datasets'][0]['data'][tooltipItem['index']].y;
             },
-            // ONCLICK
-            onClick: function(evt, element) {
-              if(element.length > 0) {
-                let ind = element[0]._index;
-                self.openDialog(self.currentBalanceHistory[ind].transaction);
-              }
-            },
-            // LAYOUT
-            layout: {
-              padding: {
-                left: 20,
-                right: 20,
-                top: 20,
-                bottom: 20
-              }
+            afterBody: function(tooltipItem, data) {
+              return 'Change : '+data['datasets'][0]['data'][tooltipItem[0]['index']].amount;
             }
           }
-        });
-
-      },
-      // handle the error, otherwise will break the Observable
-      error => console.log(error)
-    );
+        },
+        // ONCLICK
+        onClick: function(evt, element) {
+          if(element.length > 0) {
+            let ind = element[0]._index;
+            self.openDialog(self.currentBalanceHistory[ind].transaction);
+          }
+        },
+        // LAYOUT
+        layout: {
+          padding: {
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: 20
+          }
+        }
+      }
+    });
   }
 
-  getCompleteBalanceHistory(transactionDtos:TransactionDto[]): BalanceChartData[] {
+  private getCompleteBalanceHistory(transactionDtos:TransactionDto[]): BalanceChartData[] {
     let balanceHistory: BalanceChartData[] = [];
     let balance = 0;
     this.sortByExecutionDate(transactionDtos).forEach(r => {

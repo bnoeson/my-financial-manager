@@ -8,7 +8,7 @@ import {TransactionService} from "../../transaction.service";
   styleUrls: ['./balance-chart.page.css']
 })
 export class BalanceChartPage implements OnInit {
-  private transactionDtos: TransactionDto[];
+  transactionDtos: TransactionDto[];
 
   constructor(private transactionService: TransactionService){}
 
