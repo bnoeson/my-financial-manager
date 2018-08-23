@@ -1,11 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Chart } from 'chart.js';
 import { TransactionService } from "../../transaction.service";
-import {TransactionDto, TransactionDtoBuilder} from "../../model/TransactionDto";
+import { TransactionDto } from "../../model/TransactionDto";
 import { MatDialog } from "@angular/material";
 import { TransactionDialogComponent } from "../transaction-dialog/transaction-dialog.component";
 import { AppComponent } from "../../../../app.component";
-import {map} from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: 'balance-chart',
