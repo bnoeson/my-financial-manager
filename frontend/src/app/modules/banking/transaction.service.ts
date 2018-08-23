@@ -33,7 +33,7 @@ export class TransactionService {
   }
 
   getTransaction(id: string) {
-    return this._http.get(ApiUrls.TRANSACTIONS_API + '/' + id);
+    return this._http.get(`${ApiUrls.TRANSACTIONS_API}/${id}`);
   }
 
 }

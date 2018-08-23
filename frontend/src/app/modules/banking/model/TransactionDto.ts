@@ -194,7 +194,7 @@ export class TransactionDto {
   }
 
   getAmountWithCurrency() {
-    return this.amount + ' ' + this.currency;
+    return `${this.amount} ${this.currency}`;
   }
 
 }
