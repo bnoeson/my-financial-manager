@@ -1,9 +1,9 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource, MatSort} from '@angular/material';
-import {TransactionDto} from "../../model/TransactionDto";
+import {TransactionDto} from '../../model/TransactionDto';
 
 @Component({
-  selector: 'transaction-table',
+  selector: 'mf-transaction-table',
   templateUrl: './transaction-table.component.html',
   styleUrls: ['./transaction-table.component.css']
 })
@@ -20,11 +20,10 @@ export class TransactionTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(this.transactionDtos){
+    if (this.transactionDtos) {
       this.dataSource = new MatTableDataSource(this.transactionDtos);
       this.dataSource.sort = this.sort;
-    }
-    else if(this.transactionDto){
+    } else if (this.transactionDto) {
       this.transactionDtos = new Array<TransactionDto>(this.transactionDto);
       this.dataSource = new MatTableDataSource(this.transactionDtos);
     }

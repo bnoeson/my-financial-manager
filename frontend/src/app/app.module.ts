@@ -14,15 +14,15 @@ import {
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BalanceChartComponent } from './modules/banking/components/balance-chart/balance-chart.component';
-import { TransactionDialogComponent } from "./modules/banking/components/transaction-dialog/transaction-dialog.component";
-import {NgxDaterangepickerMd} from "ngx-daterangepicker-material";
-import {FormsModule} from "@angular/forms";
-import {routing} from "./app.routing";
+import { TransactionDialogComponent } from './modules/banking/components/transaction-dialog/transaction-dialog.component';
+import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
+import {FormsModule} from '@angular/forms';
+import {routing} from './app.routing';
 import { TransactionFilePage } from './modules/banking/pages/transaction-file/transaction-file.page';
-import {TransactionFileTableComponent} from "./modules/banking/components/transaction-file-table/transaction-file-table.component";
+import {TransactionFileTableComponent} from './modules/banking/components/transaction-file-table/transaction-file-table.component';
 
-import {ApiUrlInterceptor} from "./shared/ApiUrlInterceptor";
-import {TransactionFileService} from "./modules/banking/transaction-file.service";
+import {ApiUrlInterceptor} from './shared/ApiUrlInterceptor';
+import {TransactionFileService} from './modules/banking/transaction-file.service';
 
 @NgModule({
   declarations: [

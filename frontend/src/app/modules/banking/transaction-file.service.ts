@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { TransactionFileDto, TransactionFileDtoBuilder } from "./model/TransactionFileDto";
-import { map } from "rxjs/internal/operators";
-import { Observable } from "rxjs/index";
-import { TransactionDto } from "./model/TransactionDto";
-import { HttpClient, HttpEvent, HttpRequest } from "@angular/common/http";
+import { TransactionFileDto, TransactionFileDtoBuilder } from './model/TransactionFileDto';
+import { map } from 'rxjs/internal/operators';
+import { Observable } from 'rxjs/index';
+import { TransactionDto } from './model/TransactionDto';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,7 @@ export class TransactionFileService {
     return this._http.request(req);
   }
 
-  startBatch(transactionFileId : number) {
+  startBatch(transactionFileId: number) {
     return this._http.post(
       ApiUrls.TRANSACTIONS_FILES_START_BATCH, transactionFileId, { responseType: 'text' });
   }

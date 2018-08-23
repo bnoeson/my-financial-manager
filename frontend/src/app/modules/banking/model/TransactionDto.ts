@@ -110,15 +110,15 @@ export class TransactionDto {
   private _accountNumber: string;
 
   constructor(builder: TransactionDtoBuilder) {
-    this._id= builder.id;
-    this._sequenceNumber= builder.sequenceNumber;
-    this._executionDate= builder.executionDate;
-    this._valueDate= builder.valueDate;
-    this._amount= builder.amount;
-    this._currency= builder.currency;
-    this._counterparty= builder.counterparty;
-    this._details= builder.details;
-    this._accountNumber= builder.accountNumber;
+    this._id = builder.id;
+    this._sequenceNumber = builder.sequenceNumber;
+    this._executionDate = builder.executionDate;
+    this._valueDate = builder.valueDate;
+    this._amount = builder.amount;
+    this._currency = builder.currency;
+    this._counterparty = builder.counterparty;
+    this._details = builder.details;
+    this._accountNumber = builder.accountNumber;
   }
 
   get id(): number {

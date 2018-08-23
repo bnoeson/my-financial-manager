@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from "rxjs/internal/operators";
-import { TransactionDto, TransactionDtoBuilder } from "./model/TransactionDto";
+import { map } from 'rxjs/internal/operators';
+import { TransactionDto, TransactionDtoBuilder } from './model/TransactionDto';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TransactionFileTableComponent } from './transaction-file-table.component';
-import {TransactionTableComponent} from "../transaction-table/transaction-table.component";
+import {TransactionTableComponent} from '../transaction-table/transaction-table.component';
 
 describe('TransactionFileTableComponent', () => {
   let component: TransactionTableComponent;

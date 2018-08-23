@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpEventType, HttpResponse} from "@angular/common/http";
-import {TransactionFileDto} from "../../model/TransactionFileDto";
-import {TransactionFileService} from "../../transaction-file.service";
+import {HttpEventType, HttpResponse} from '@angular/common/http';
+import {TransactionFileDto} from '../../model/TransactionFileDto';
+import {TransactionFileService} from '../../transaction-file.service';
 
 @Component({
-  selector: 'transaction-file-page',
+  selector: 'mf-transaction-file-page',
   templateUrl: './transaction-file.page.html',
   styleUrls: ['./transaction-file.page.css']
 })
@@ -34,7 +34,7 @@ export class TransactionFilePage implements OnInit {
         this.progress.percentage = Math.round(100 * event.loaded / event.total);
       } else if (event instanceof HttpResponse) {
         console.log('File is completely uploaded!');
-        this.updateTransactionFilesData()
+        this.updateTransactionFilesData();
       }
     });
 
@@ -51,12 +51,12 @@ export class TransactionFilePage implements OnInit {
     );
   }
 
-  startBatch(transactionFileId : number){
+  startBatch(transactionFileId: number) {
     this.transactionFileService.startBatch(transactionFileId).subscribe(
       data => {
         this.updateTransactionFilesData();
       },
-      err => { console.log(err) }
+      err => { console.log(err); }
     );
   }
 

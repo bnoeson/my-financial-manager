@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import {TransactionDto} from "../../model/TransactionDto";
-import {TransactionService} from "../../transaction.service";
+import {TransactionDto} from '../../model/TransactionDto';
+import {TransactionService} from '../../transaction.service';
 
 @Component({
-  selector: 'balance-chart-page',
+  selector: 'mf-balance-chart-page',
   templateUrl: './balance-chart.page.html',
   styleUrls: ['./balance-chart.page.css']
 })
 export class BalanceChartPage implements OnInit {
   transactionDtos: Array<TransactionDto>;
 
-  constructor(private transactionService: TransactionService){}
+  constructor(private transactionService: TransactionService) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.transactionService.getAll().subscribe(data => {
         this.transactionDtos = data;
       },

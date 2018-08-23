@@ -13,5 +13,5 @@
 <button class="btn btn-success" (click)="updateTransactionFilesData()">Refresh</button>
 
 <div *ngIf='allTransactionFiles'> <!-- postpone initialization to wait for rest call success -->
-  <transaction-file-table [files]="allTransactionFiles" (onBatchStarted)="startBatch($event)"></transaction-file-table>
+  <mf-transaction-file-table [files]="allTransactionFiles" (batchStarted)="startBatch($event)"></mf-transaction-file-table>
 </div>
