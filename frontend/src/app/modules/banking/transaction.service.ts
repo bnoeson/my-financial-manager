@@ -1,35 +1,19 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {map} from "rxjs/internal/operators";
-import {TransactionDto, TransactionDtoBuilder} from "./model/TransactionDto";
-import {TransactionFileDto, TransactionFileDtoBuilder} from "./model/TransactionFileDto";
+import { map } from "rxjs/internal/operators";
+import { TransactionDto, TransactionDtoBuilder } from "./model/TransactionDto";
+import { TransactionFileDto, TransactionFileDtoBuilder } from "./model/TransactionFileDto";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionService {
 
-  private static readonly API_PORT : string = "8080";
-  private static readonly TRANSACTIONS_API : string = "/transactions";
-  private static readonly TRANSACTIONS_FILES_API : string = "/transactions/files";
-  private static readonly TRANSACTIONS_FILES_START_BATCH : string = "/transactions/files/import";
-
-  private readonly hostname : string;
-  private readonly apiUrl : string;
-
-  constructor(private _http: HttpClient) {
-
-    this.hostname = location.host;
-    if (this.hostname.indexOf(':') > 0) {
-      this.hostname = this.hostname.substr(0, this.hostname.indexOf(':') + 1);
-    }
-    this.apiUrl = "http://" + this.hostname + TransactionService.API_PORT;
-
-  }
+  constructor(private _http: HttpClient) {}
 
   getAll(): Observable<TransactionDto[]> {
-    return this._http.get<TransactionDto[]>(this.apiUrl + TransactionService.TRANSACTIONS_API)
+    return this._http.get<TransactionDto[]>(ApiUrls.TRANSACTIONS_API)
       .pipe(
         map((response: any[]) =>
           response.map((resp) => {
@@ -50,7 +34,7 @@ export class TransactionService {
   }
 
   getTransaction(id: string) {
-    return this._http.get(this.apiUrl + TransactionService.TRANSACTIONS_API + '/' + id);
+    return this._http.get(ApiUrls.TRANSACTIONS_API + '/' + id);
   }
 
   pushFileToStorage(file: File): Observable<HttpEvent<{}>> {
@@ -58,7 +42,7 @@ export class TransactionService {
 
     formdata.append('file', file);
 
-    const req = new HttpRequest('POST', this.apiUrl + TransactionService.TRANSACTIONS_FILES_API, formdata, {
+    const req = new HttpRequest('POST', ApiUrls.TRANSACTIONS_FILES_API, formdata, {
       reportProgress: true,
       responseType: 'text'
     });
@@ -66,7 +50,7 @@ export class TransactionService {
   }
 
   getAllTransactionFiles(): Observable<TransactionFileDto[]> {
-    return this._http.get<TransactionDto[]>(this.apiUrl + TransactionService.TRANSACTIONS_FILES_API)
+    return this._http.get<TransactionDto[]>(ApiUrls.TRANSACTIONS_FILES_API)
       .pipe(
         map((response: any[]) => response.map((resp) => {
           return new TransactionFileDtoBuilder()
@@ -82,7 +66,7 @@ export class TransactionService {
 
   startBatch(transactionFileId : number) {
     return this._http.post(
-      this.apiUrl + TransactionService.TRANSACTIONS_FILES_START_BATCH, transactionFileId, { responseType: 'text' });
+      ApiUrls.TRANSACTIONS_FILES_START_BATCH, transactionFileId, { responseType: 'text' });
   }
 
 }

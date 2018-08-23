@@ -1,8 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
-
 import { TransactionService } from './modules/banking/transaction.service';
 import { TransactionTableComponent } from './modules/banking/components/transaction-table/transaction-table.component';
 import { BalanceChartPage } from './modules/banking/pages/balance-chart/balance-chart.page';
@@ -12,6 +11,7 @@ import {
   MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatToolbarModule, MatTableModule,
   MatSortModule, MatDialogModule, MatSidenavModule, MatIconModule
 } from '@angular/material';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BalanceChartComponent } from './modules/banking/components/balance-chart/balance-chart.component';
 import { TransactionDialogComponent } from "./modules/banking/components/transaction-dialog/transaction-dialog.component";
@@ -20,6 +20,8 @@ import {FormsModule} from "@angular/forms";
 import {routing} from "./app.routing";
 import { TransactionFilePage } from './modules/banking/pages/transaction-file/transaction-file.page';
 import {TransactionFileTableComponent} from "./modules/banking/components/transaction-file-table/transaction-file-table.component";
+
+import {ApiUrlInterceptor} from "./shared/ApiUrlInterceptor";
 
 @NgModule({
   declarations: [
@@ -49,7 +51,10 @@ import {TransactionFileTableComponent} from "./modules/banking/components/transa
     NgxDaterangepickerMd,
     FormsModule
   ],
-  providers: [TransactionService],
+  providers: [
+    TransactionService,
+    {provide: HTTP_INTERCEPTORS, useClass: ApiUrlInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent],
   entryComponents: [TransactionDialogComponent]
 })
