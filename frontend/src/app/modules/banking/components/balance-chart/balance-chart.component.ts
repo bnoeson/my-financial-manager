@@ -1,10 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Chart } from 'chart.js';
-import {TransactionService} from "../../transaction.service";
-import {TransactionDto} from "../../model/TransactionDto";
-import {MatDialog} from "@angular/material";
-import {TransactionDialogComponent} from "../transaction-dialog/transaction-dialog.component";
-import {AppComponent} from "../../../../app.component";
+import { TransactionService } from "../../transaction.service";
+import {TransactionDto, TransactionDtoBuilder} from "../../model/TransactionDto";
+import { MatDialog } from "@angular/material";
+import { TransactionDialogComponent } from "../transaction-dialog/transaction-dialog.component";
+import { AppComponent } from "../../../../app.component";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'balance-chart',
@@ -26,18 +27,20 @@ export class BalanceChartComponent implements AfterViewInit {
   };
 
   private chart: Chart;
-  private completeBalanceHistory: ChartData[];
-  private currentBalanceHistory: ChartData[];
+  private completeBalanceHistory: BalanceChartData[];
+  private currentBalanceHistory: BalanceChartData[];
 
   constructor(private transactionService : TransactionService, public dialog: MatDialog, public appComponent : AppComponent) { }
 
   ngAfterViewInit() {
     let self = this;
-    this.transactionService.getAll().subscribe(
-      data => {
+    this.transactionService.getAll()
+      .pipe(
+        map<TransactionDto[], BalanceChartData[]>( (transactionDtos: TransactionDto[]) => this.getCompleteBalanceHistory(transactionDtos) )
+      )
+      .subscribe( (balanceHistory: BalanceChartData[]) => {
 
-        data = this.sortByExecutionDate(data);
-        this.completeBalanceHistory = this.getCompleteBalanceHistory(data);
+        this.completeBalanceHistory = balanceHistory;
         this.currentBalanceHistory = this.completeBalanceHistory;
 
         let canvas = <HTMLCanvasElement> document.getElementById("balanceChart");
@@ -108,21 +111,20 @@ export class BalanceChartComponent implements AfterViewInit {
     );
   }
 
-  getCompleteBalanceHistory(transactionDtos:TransactionDto[]){
-    let balanceHistory: ChartData[] = [];
-
+  getCompleteBalanceHistory(transactionDtos:TransactionDto[]): BalanceChartData[] {
+    let balanceHistory: BalanceChartData[] = [];
     let balance = 0;
-    transactionDtos.forEach(r => {
+    this.sortByExecutionDate(transactionDtos).forEach(r => {
         balance += r.amount;
         balanceHistory.push(
-          new ChartData(r.executionDate, balance, r.amount, r)
+          new BalanceChartData(r.executionDate, balance, r.amount, r)
         )
       }
     );
     return balanceHistory;
   }
 
-  private sortByExecutionDate(data){
+  private sortByExecutionDate(data: TransactionDto[]){
     data.sort(function (a,b) {
       if (a.executionDate < b.executionDate)
         return -1;
@@ -160,12 +162,12 @@ export class BalanceChartComponent implements AfterViewInit {
 
 }
 
-class SelectedPeriod {
+interface SelectedPeriod {
   startDate: Date;
   endDate: Date;
 }
 
-class ChartData {
+class BalanceChartData {
   t: Date;
   y: string;
   amount: string;

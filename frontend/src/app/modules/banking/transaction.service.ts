@@ -31,19 +31,21 @@ export class TransactionService {
   getAll(): Observable<TransactionDto[]> {
     return this._http.get<TransactionDto[]>(this.apiUrl + TransactionService.TRANSACTIONS_API)
       .pipe(
-        map((response: any[]) => response.map((resp) => {
-          return new TransactionDtoBuilder()
-            .withId(resp.id)
-            .withSequenceNumber(resp.sequenceNumber)
-            .withExecutionDate(new Date(resp.executionDate))
-            .withValueDate(new Date(resp.valueDate))
-            .withAmount(resp.amount)
-            .withCurrency(<CurrencyEnum> resp.currency)
-            .withCounterparty(resp.counterparty)
-            .withDetails(resp.details)
-            .withAccountNumber(resp.accountNumber)
-            .build();
-        }))
+        map((response: any[]) =>
+          response.map((resp) => {
+            return new TransactionDtoBuilder()
+              .withId(resp.id)
+              .withSequenceNumber(resp.sequenceNumber)
+              .withExecutionDate(new Date(resp.executionDate))
+              .withValueDate(new Date(resp.valueDate))
+              .withAmount(resp.amount)
+              .withCurrency(<CurrencyEnum> resp.currency)
+              .withCounterparty(resp.counterparty)
+              .withDetails(resp.details)
+              .withAccountNumber(resp.accountNumber)
+              .build();
+          })
+        )
       );
   }
 
