@@ -4,7 +4,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { TransactionService } from './modules/banking/transaction.service';
 import { TransactionTableComponent } from './modules/banking/components/transaction-table/transaction-table.component';
-import { BalanceChartPage } from './modules/banking/pages/balance-chart/balance-chart.page';
+import { BalanceChartPageComponent } from './modules/banking/pages/balance-chart-page/balance-chart-page.component';
 
 // Angular Material
 import {
@@ -18,7 +18,7 @@ import { TransactionDialogComponent } from './modules/banking/components/transac
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 import {FormsModule} from '@angular/forms';
 import {routing} from './app.routing';
-import { TransactionFilePage } from './modules/banking/pages/transaction-file/transaction-file.page';
+import { TransactionFilePageComponent } from './modules/banking/pages/transaction-file-page/transaction-file-page.component';
 import {TransactionFileTableComponent} from './modules/banking/components/transaction-file-table/transaction-file-table.component';
 
 import {ApiUrlInterceptor} from './shared/ApiUrlInterceptor';
@@ -30,8 +30,8 @@ import {TransactionFileService} from './modules/banking/transaction-file.service
     TransactionTableComponent,
     BalanceChartComponent,
     TransactionDialogComponent,
-    BalanceChartPage,
-    TransactionFilePage,
+    BalanceChartPageComponent,
+    TransactionFilePageComponent,
     TransactionFileTableComponent
   ],
   imports: [

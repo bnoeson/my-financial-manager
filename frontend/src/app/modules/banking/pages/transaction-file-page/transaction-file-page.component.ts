@@ -5,10 +5,10 @@ import {TransactionFileService} from '../../transaction-file.service';
 
 @Component({
   selector: 'mf-transaction-file-page',
-  templateUrl: './transaction-file.page.html',
-  styleUrls: ['./transaction-file.page.css']
+  templateUrl: './transaction-file-page.component.html',
+  styleUrls: ['./transaction-file-page.component.css']
 })
-export class TransactionFilePage implements OnInit {
+export class TransactionFilePageComponent implements OnInit {
 
   private selectedFiles: FileList;
   private currentFileUpload: File;

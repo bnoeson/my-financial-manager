@@ -4,10 +4,10 @@ import {TransactionService} from '../../transaction.service';
 
 @Component({
   selector: 'mf-balance-chart-page',
-  templateUrl: './balance-chart.page.html',
-  styleUrls: ['./balance-chart.page.css']
+  templateUrl: './balance-chart-page.component.html',
+  styleUrls: ['./balance-chart-page.component.css']
 })
-export class BalanceChartPage implements OnInit {
+export class BalanceChartPageComponent implements OnInit {
   transactionDtos: Array<TransactionDto>;
 
   constructor(private transactionService: TransactionService) {}

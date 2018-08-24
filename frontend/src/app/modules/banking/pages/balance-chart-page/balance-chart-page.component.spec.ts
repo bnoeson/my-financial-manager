@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TransactionFilePage } from './transaction-file.page';
+import { BalanceChartPageComponent } from './balance-chart-page.component';
 
-describe('TransactionFilePage', () => {
-  let component: TransactionFilePage;
-  let fixture: ComponentFixture<TransactionFilePage>;
+describe('BalanceChartPageComponent', () => {
+  let component: BalanceChartPageComponent;
+  let fixture: ComponentFixture<BalanceChartPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransactionFilePage ]
+      declarations: [ BalanceChartPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TransactionFilePage);
+    fixture = TestBed.createComponent(BalanceChartPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
