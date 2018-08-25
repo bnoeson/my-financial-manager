@@ -6,3 +6,8 @@ body {
   margin: 0;
   font-family: Roboto, sans-serif;
 }
+
+@import "styles-variables";
+
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap-grid';
