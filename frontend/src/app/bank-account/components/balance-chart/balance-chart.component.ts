@@ -43,7 +43,7 @@ export class BalanceChartComponent implements AfterViewInit {
     const ctx = canvas.getContext('2d');
 
     ctx.canvas.width  = window.innerWidth;
-    ctx.canvas.height = window.innerHeight - this.getToolbarHeight() - document.getElementById('chartButtons').offsetHeight;
+    ctx.canvas.height = 500;
 
     this.chart = new Chart(ctx, {
       type: 'line',
@@ -100,11 +100,6 @@ export class BalanceChartComponent implements AfterViewInit {
         }
       }
     });
-  }
-
-  // TODO à déplacer
-  private getToolbarHeight(): number {
-    return document.getElementsByClassName('mat-toolbar')[0].clientHeight;
   }
 
   private getCompleteBalanceHistory(transactionDtos: Array<TransactionDto>): Array<BalanceChartData> {
