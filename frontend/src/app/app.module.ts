@@ -1,63 +1,34 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { AppComponent } from './app.component';
-import { TransactionService } from './modules/banking/transaction.service';
-import { TransactionTableComponent } from './modules/banking/components/transaction-table/transaction-table.component';
-import { BalanceChartPageComponent } from './modules/banking/pages/balance-chart-page/balance-chart-page.component';
-
-// Angular Material
-import {
-  MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatToolbarModule, MatTableModule,
-  MatSortModule, MatDialogModule, MatSidenavModule, MatIconModule
-} from '@angular/material';
-
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { MatButtonModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BalanceChartComponent } from './modules/banking/components/balance-chart/balance-chart.component';
-import { TransactionDialogComponent } from './modules/banking/components/transaction-dialog/transaction-dialog.component';
-import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {FormsModule} from '@angular/forms';
-import {routing} from './app.routing';
-import { TransactionFilePageComponent } from './modules/banking/pages/transaction-file-page/transaction-file-page.component';
-import {TransactionFileTableComponent} from './modules/banking/components/transaction-file-table/transaction-file-table.component';
-
-import {ApiUrlInterceptor} from './shared/ApiUrlInterceptor';
-import {TransactionFileService} from './modules/banking/transaction-file.service';
+import { AppComponent } from './app.component';
+import { AppRouting } from './app.routing';
+import { BankAccountModule } from './bank-account/bank-account.module';
+import { ApiUrlInterceptor } from './core/api/ApiUrlInterceptor';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TransactionTableComponent,
-    BalanceChartComponent,
-    TransactionDialogComponent,
-    BalanceChartPageComponent,
-    TransactionFilePageComponent,
-    TransactionFileTableComponent
+    AppComponent
   ],
   imports: [
-    routing,
-    BrowserModule,
+    AppRouting,
     HttpClientModule,
+    BankAccountModule,
+
+    // UI
+    BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatCardModule,
-    MatInputModule,
-    MatListModule,
-    MatToolbarModule,
-    MatTableModule,
-    MatSortModule,
-    MatDialogModule,
     MatSidenavModule,
+    MatToolbarModule,
     MatIconModule,
-    NgxDaterangepickerMd,
-    FormsModule
+    MatListModule,
   ],
   providers: [
-    TransactionService,
-    TransactionFileService,
     {provide: HTTP_INTERCEPTORS, useClass: ApiUrlInterceptor, multi: true}
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [TransactionDialogComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
