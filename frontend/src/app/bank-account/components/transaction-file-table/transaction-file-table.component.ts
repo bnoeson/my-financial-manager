@@ -5,7 +5,7 @@ import {TransactionFileDto} from '../../model/TransactionFileDto';
 @Component({
   selector: 'mf-transaction-file-table',
   templateUrl: './transaction-file-table.component.html',
-  styleUrls: ['./transaction-file-table.component.css']
+  styleUrls: ['./transaction-file-table.component.scss']
 })
 export class TransactionFileTableComponent implements OnInit {
 

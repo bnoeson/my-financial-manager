@@ -5,7 +5,7 @@ import {TransactionService} from '../../shared/transaction.service';
 @Component({
   selector: 'mf-balance-chart-page',
   templateUrl: './balance-chart-page.component.html',
-  styleUrls: ['./balance-chart-page.component.css']
+  styleUrls: ['./balance-chart-page.component.scss']
 })
 export class BalanceChartPageComponent implements OnInit {
   transactionDtos: Array<TransactionDto>;

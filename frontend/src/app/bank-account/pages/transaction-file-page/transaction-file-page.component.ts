@@ -6,7 +6,7 @@ import {TransactionFileService} from '../../shared/transaction-file.service';
 @Component({
   selector: 'mf-transaction-file-page',
   templateUrl: './transaction-file-page.component.html',
-  styleUrls: ['./transaction-file-page.component.css']
+  styleUrls: ['./transaction-file-page.component.scss']
 })
 export class TransactionFilePageComponent implements OnInit {
 

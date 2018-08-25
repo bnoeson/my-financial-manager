@@ -8,7 +8,7 @@ import { AppComponent } from '../../../app.component';
 @Component({
   selector: 'mf-balance-chart',
   templateUrl: './balance-chart.component.html',
-  styleUrls: ['./balance-chart.component.css']
+  styleUrls: ['./balance-chart.component.scss']
 })
 export class BalanceChartComponent implements AfterViewInit {
 
