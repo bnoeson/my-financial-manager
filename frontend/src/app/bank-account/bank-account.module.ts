@@ -7,7 +7,7 @@ import {
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
-import { BankAccountRouting } from './bank-account.routing';
+import { BankAccountRoutingModule } from './bank-account-routing.module';
 import { BalanceChartComponent } from './components/balance-chart/balance-chart.component';
 import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
 import { TransactionFileTableComponent } from './components/transaction-file-table/transaction-file-table.component';
@@ -17,9 +17,10 @@ import { TransactionFilePageComponent } from './pages/transaction-file-page/tran
 
 @NgModule({
   imports: [
+    // Router
+    BankAccountRoutingModule,
     CommonModule,
     NgxDaterangepickerMd,
-    BankAccountRouting,
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
