@@ -1,8 +1,7 @@
-<div *ngIf='transactionDtos'> <!-- postpone initialization to wait for rest call success -->
-  <mf-balance-chart [transactionDtos]="transactionDtos"></mf-balance-chart>
+<div class="container">
+  <div *ngIf='transactionDtos' style="height: 500px; width: 100%"> <!-- postpone initialization to wait for rest call success -->
+    <mf-balance-chart [transactionDtos]="transactionDtos"></mf-balance-chart>
+  </div>
+
 </div>
 
-<!-- TODO use for a page with only the transactions -->
-<!--<div *ngIf='allTransactions'> &lt;!&ndash; postpone initialization to wait for rest call success &ndash;&gt;-->
-  <!--<mf-transaction-table [transactionDtos]="allTransactions"></mf-transaction-table>-->
-<!--</div>-->

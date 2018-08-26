@@ -10,7 +10,7 @@ export class TransactionDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<TransactionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public transaction: Array<TransactionDto>) { }
+    @Inject(MAT_DIALOG_DATA) public transactionDtos: Array<TransactionDto>) { }
 
   onNoClick(): void {
     this.dialogRef.close();

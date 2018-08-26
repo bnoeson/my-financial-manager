@@ -1,9 +1,12 @@
 import {AfterViewInit, Component, Input} from '@angular/core';
-import { Chart } from 'chart.js';
+import { Moment } from 'moment';
 import { TransactionDto } from '../../model/TransactionDto';
 import { MatDialog } from '@angular/material';
 import { TransactionDialogComponent } from '../transaction-dialog/transaction-dialog.component';
-import { AppComponent } from '../../../app.component';
+import * as moment from 'moment';
+
+// import * as echarts from 'echarts';
+declare const echarts: any;
 
 @Component({
   selector: 'mf-balance-chart',
@@ -14,102 +17,124 @@ export class BalanceChartComponent implements AfterViewInit {
 
   @Input() transactionDtos: Array<TransactionDto>;
 
-  // use that DATE-RANGE-PICKER (https://github.com/fetrarij/ngx-daterangepicker-material),
-  // waiting for this functionality in angular material
-  // see issue : https://github.com/fetrarij/ngx-daterangepicker-material
-  private selectedPeriod: SelectedPeriod;
-  private dateRanges: any = {
-    'Today': [new Date(), new Date()],
-    'This week': [new Date().setDate(new Date().getDate() - 6), new Date()],
-    'This month': [new Date().setDate(new Date().getDate() - 29), new Date()],
-    'This quarter': [new Date().setDate(new Date().getDate() - 89), new Date()],
-    'This year': [new Date().setDate(new Date().getDate() - 364), new Date()],
-    'All the time': [new Date().setDate(-36500), new Date()] // a century
-  };
+  private balanceHistory: Array<BalanceChartData>;
 
-  private chart: Chart;
-  private completeBalanceHistory: Array<BalanceChartData>;
-  private currentBalanceHistory: Array<BalanceChartData>;
-
-  constructor(public dialog: MatDialog, public appComponent: AppComponent) { }
+  constructor(public dialog: MatDialog) { }
 
   ngAfterViewInit() {
     const self = this;
 
-    this.completeBalanceHistory = this.getCompleteBalanceHistory(this.transactionDtos);
-    this.currentBalanceHistory = this.completeBalanceHistory;
+    this.balanceHistory = this.getBalanceHistory(this.transactionDtos);
 
-    const canvas = <HTMLCanvasElement> document.getElementById('balanceChart');
-    const ctx = canvas.getContext('2d');
+    const balanceChart = echarts.init(<HTMLDivElement>document.getElementById('balance-chart'));
 
-    ctx.canvas.width  = window.innerWidth;
-    ctx.canvas.height = 500;
-
-    this.chart = new Chart(ctx, {
-      type: 'line',
-      responsive: true,
-      data: {
-        datasets: [{
-          steppedLine: true,
-          label: 'Balance history',
-          data: this.completeBalanceHistory,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        // SCALES - AXES
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }],
-          xAxes: [{
-            type: 'time'
-          }]
-        },
-        // TOOLTIPS
-        tooltips: {
-          callbacks: {
-            title: function(tooltipItem, data) {
-              return data['datasets'][0]['data'][tooltipItem[0]['index']].t;
-            },
-            label: function(tooltipItem, data) {
-              return data['datasets'][0]['data'][tooltipItem['index']].y;
-            },
-            afterBody: function(tooltipItem, data) {
-              return 'Change : ' + data['datasets'][0]['data'][tooltipItem[0]['index']].amount;
-            }
-          }
-        },
-        // ONCLICK
-        onClick: function(evt, element) {
-          if (element.length > 0) {
-            const ind = element[0]._index;
-            self.openDialog(self.currentBalanceHistory[ind].transaction);
-          }
-        },
-        // LAYOUT
-        layout: {
-          padding: {
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: 20
-          }
+    const option = {
+      tooltip: {
+        trigger: 'axis',
+        formatter: function (params) {
+          const element: BalanceChartData = self.balanceHistory[params[0].dataIndex];
+          return `${params[0].axisValue}</br>Balance : ${params[0].value}</br>Change : ${element.amount}`;
         }
-      }
+      },
+      title: {
+        left: 'center',
+        text: 'Balance history',
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: this.balanceHistory.map(data => {
+          return moment(data.date).format('DD/MM/YYYY');
+        })
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%']
+      },
+      dataZoom: [{
+        type: 'inside',
+        start: 0,
+        end: 100
+      }, {
+        start: 0,
+        end: 100,
+        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.' +
+        '3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+        handleSize: '80%',
+        handleStyle: {
+          color: '#fff',
+          shadowBlur: 3,
+          shadowColor: 'rgba(0, 0, 0, 0.6)',
+          shadowOffsetX: 2,
+          shadowOffsetY: 2
+        }
+      }],
+      series: [
+        {
+          name: 'Balance',
+          type: 'line',
+          smooth: true,
+          sampling: 'average',
+          itemStyle: {
+            normal: {
+              color: 'rgb(255, 70, 131)'
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgb(255, 158, 68)'
+              }, {
+                offset: 1,
+                color: 'rgb(255, 70, 131)'
+              }])
+            }
+          },
+          data: this.balanceHistory.map(data => {
+            return data.balance;
+          })
+        }
+      ]
+    };
+
+    balanceChart.setOption(option);
+
+    balanceChart.on('click', function (params) {
+      const element: BalanceChartData = self.balanceHistory[params.dataIndex];
+      self.openDialog(element.transactions);
     });
+
   }
 
-  private getCompleteBalanceHistory(transactionDtos: Array<TransactionDto>): Array<BalanceChartData> {
+  private getBalanceHistory(transactionDtos: Array<TransactionDto>): Array<BalanceChartData> {
+    const sortedTransactionDtos = this.sortByExecutionDate(transactionDtos);
+
     const balanceHistory: Array<BalanceChartData> = [];
     let balance = 0;
-    this.sortByExecutionDate(transactionDtos).forEach(r => {
-        balance += r.amount;
-        balanceHistory.push(new BalanceChartData(r.executionDate, balance, r.amount, r));
+    let dayAmount = 0;
+    let dayTransactions: Array<TransactionDto> = [];
+    let transactionIndex = 0;
+    let date: Moment = moment(sortedTransactionDtos[transactionIndex].executionDate).startOf('day');
+    while (date <= moment().startOf('day') ) {
+      dayAmount = 0;
+      dayTransactions = [];
+
+      for (let i = transactionIndex; i < sortedTransactionDtos.length; i++) {
+        if (moment(sortedTransactionDtos[transactionIndex].executionDate).startOf('day').isSame(date)) {
+          dayAmount += sortedTransactionDtos[transactionIndex].amount;
+          balance += sortedTransactionDtos[transactionIndex].amount;
+          dayTransactions.push(sortedTransactionDtos[transactionIndex]);
+          transactionIndex++;
+        } else {
+          break;
+        }
       }
-    );
+
+      balanceHistory.push(new BalanceChartData(date.toDate(), balance, dayAmount, dayTransactions));
+
+      date = date.add(1, 'day');
+    }
     return balanceHistory;
   }
 
@@ -126,48 +151,25 @@ export class BalanceChartComponent implements AfterViewInit {
     return data;
   }
 
-  openDialog(transactionDto: TransactionDto): void {
+  openDialog(transactionDtos: Array<TransactionDto>): void {
     const dialogRef = this.dialog.open(TransactionDialogComponent, {
-      data: transactionDto
+      data: transactionDtos
     });
   }
 
-  updateChart() {
-    if (this.selectedPeriod) {
-      this.currentBalanceHistory = this.filterBalanceHistoryForPeriod(this.selectedPeriod);
-
-      this.chart.data.datasets[0].data = this.currentBalanceHistory;
-      this.chart.update();
-    } else {
-      this.chart.data.datasets[0].data = this.completeBalanceHistory;
-      this.chart.update();
-    }
-  }
-
-  filterBalanceHistoryForPeriod(period: SelectedPeriod) {
-    return this.completeBalanceHistory.filter(function( b ) {
-      return b.t.getTime() >= new Date(period.startDate).getTime() && b.t.getTime() <= new Date(period.endDate).getTime();
-    });
-  }
-
-}
-
-interface SelectedPeriod {
-  startDate: Date;
-  endDate: Date;
 }
 
 class BalanceChartData {
-  t: Date;
-  y: string;
+  date: Date;
+  balance: string;
   amount: string;
-  transaction: TransactionDto;
+  transactions: Array<TransactionDto>;
 
-  constructor(t: Date, y: number, amount: number, transaction: TransactionDto) {
-    this.t = t;
-    this.y = y.toFixed(2);
+  constructor(date: Date, balance: number, amount: number, transactions: Array<TransactionDto>) {
+    this.date = date;
+    this.balance = balance.toFixed(2);
     this.amount = amount.toFixed(2);
-    this.transaction = transaction;
+    this.transactions = transactions;
   }
 
 }
