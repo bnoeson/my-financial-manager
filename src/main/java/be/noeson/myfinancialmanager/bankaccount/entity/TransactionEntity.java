@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.apache.commons.lang3.Validate;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -48,6 +49,10 @@ public class TransactionEntity implements Serializable {
     @Column(name = "DETAILS", length = 500)
     private String details;
 
+    @Column(name = "IS_INTERNAL")
+    @NotNull
+    private boolean isInternal;
+
     // default constructor
     public TransactionEntity() {
     }
@@ -61,6 +66,7 @@ public class TransactionEntity implements Serializable {
         this.setCurrency(builder.currency);
         this.setCounterparty(builder.counterparty);
         this.setDetails(builder.details);
+        this.setInternal(builder.isInternal);
     }
 
     public static class Builder {
@@ -72,6 +78,7 @@ public class TransactionEntity implements Serializable {
         private String currency;
         private String counterparty;
         private String details;
+        private boolean isInternal = false;
 
         public Builder sequenceNumber(String sequenceNumber){
             this.sequenceNumber = sequenceNumber;
@@ -110,6 +117,11 @@ public class TransactionEntity implements Serializable {
 
         public Builder details(String details){
             this.details = details;
+            return this;
+        }
+
+        public Builder isInternal(boolean isInternal){
+            this.isInternal = isInternal;
             return this;
         }
 
@@ -189,5 +201,17 @@ public class TransactionEntity implements Serializable {
 
     private void setDetails(String details) {
         this.details = Validate.notEmpty(details);
+    }
+
+    public boolean isInternal() {
+        return isInternal;
+    }
+
+    private void setInternal(boolean internal) {
+        isInternal = internal;
+    }
+
+    public void markAsInternal(){
+        this.setInternal(true);
     }
 }

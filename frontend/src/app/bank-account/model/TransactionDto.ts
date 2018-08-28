@@ -10,6 +10,7 @@ export class TransactionDtoBuilder {
   private _counterparty: string;
   private _details: string;
   private _accountNumber: string;
+  private _isInternal: boolean;
 
   get id(): number {
     return this._id;
@@ -92,6 +93,15 @@ export class TransactionDtoBuilder {
     return this;
   }
 
+  get isInternal(): boolean {
+    return this._isInternal;
+  }
+
+  withIsInternal(value: boolean) {
+    this._isInternal = value;
+    return this;
+  }
+
   build(): TransactionDto {
     return new TransactionDto(this);
   }
@@ -108,6 +118,7 @@ export class TransactionDto {
   private _counterparty: string;
   private _details: string;
   private _accountNumber: string;
+  private _isInternal: boolean;
 
   constructor(builder: TransactionDtoBuilder) {
     this._id = builder.id;
@@ -119,6 +130,7 @@ export class TransactionDto {
     this._counterparty = builder.counterparty;
     this._details = builder.details;
     this._accountNumber = builder.accountNumber;
+    this._isInternal = builder.isInternal;
   }
 
   get id(): number {
@@ -197,5 +209,12 @@ export class TransactionDto {
     return `${this.amount} ${this.currency}`;
   }
 
+  get isInternal(): boolean {
+    return this._isInternal;
+  }
+
+  set isInternal(value: boolean) {
+    this._isInternal = value;
+  }
 }
 

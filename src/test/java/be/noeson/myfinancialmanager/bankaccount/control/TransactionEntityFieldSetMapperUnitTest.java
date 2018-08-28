@@ -129,7 +129,7 @@ public class TransactionEntityFieldSetMapperUnitTest {
         Mockito.when(fieldSet.readString(6)).thenReturn(accountNumberIn);
         Mockito.when(fieldSet.getFieldCount()).thenReturn(7);
 
-        Mockito.when(transactionService.areDuplicateTransactionsPresent(Mockito.any(TransactionEntity.class))).thenReturn(true);
+        Mockito.when(transactionService.isDuplicateTransactionPresent(Mockito.any(TransactionEntity.class))).thenReturn(true);
 
         expectedEx.expect(DuplicateTransactionFoundException.class);
 

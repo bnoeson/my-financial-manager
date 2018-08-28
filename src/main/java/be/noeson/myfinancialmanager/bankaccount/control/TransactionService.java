@@ -25,16 +25,25 @@ public class TransactionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction", "id", transactionId));
     }
 
-    public Boolean areDuplicateTransactionsPresent(TransactionEntity transaction){
-        List<TransactionEntity> files = this.transactionRepository.
+    public Boolean isDuplicateTransactionPresent(TransactionEntity transaction){
+        List<TransactionEntity> transactions = this.transactionRepository.
                 findBySequenceNumberAndAccountNumber(transaction.getSequenceNumber(), transaction.getAccountNumber());
-        if( files.size() > 1 ){
+        if( transactions.size() > 1 ){
             String message = MessageFormat.format(
                     "More than one transaction found for the following combination : sequenceNumber={0}, accountNumber={1}",
                     transaction.getSequenceNumber(), transaction.getAccountNumber() );
             throw new RuntimeException(message);
         }
-        return ! CollectionUtils.isEmpty(files);
+        return ! CollectionUtils.isEmpty(transactions);
+    }
+
+    public List<TransactionEntity> findOppositeNonInternalTransactions(TransactionEntity transaction){
+        return this.transactionRepository.
+                findByExecutionDateAndAmountAndIsInternalFalse(transaction.getExecutionDate(), transaction.getAmount().negate());
+    }
+
+    public void save(TransactionEntity transactionFile) {
+        this.transactionRepository.save(transactionFile);
     }
 
 }

@@ -8,10 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
+import org.springframework.util.CollectionUtils;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TransactionFieldSetMapper implements FieldSetMapper<TransactionEntity> {
 
@@ -58,12 +61,37 @@ public class TransactionFieldSetMapper implements FieldSetMapper<TransactionEnti
             throw new RuntimeException("Transaction version not implemented : there should be 7 or 8 columns");
         }
 
-        if(this.transactionService.areDuplicateTransactionsPresent(transaction)){
+        if(this.transactionService.isDuplicateTransactionPresent(transaction)){
             LOG.info(MessageFormat.format("Duplicate found : not processing this transaction (sequenceNumber={0}, accountNumber={1}).",
                     transaction.getSequenceNumber(), transaction.getAccountNumber()));
             throw new DuplicateTransactionFoundException();
         }
 
+        transaction = this.handleOppositeTransactions(transaction);
+
+        return transaction;
+    }
+
+    private TransactionEntity handleOppositeTransactions(TransactionEntity transaction){
+
+        List<TransactionEntity> oppositeTransactions = this.transactionService.findOppositeNonInternalTransactions(transaction);
+        if(! CollectionUtils.isEmpty(oppositeTransactions)){
+
+            oppositeTransactions = oppositeTransactions.stream()
+                    .filter(t -> { return ! t.getAccountNumber().equals(transaction.getAccountNumber()); })
+                    .filter(t -> { return ! t.getCounterparty().equals(transaction.getCounterparty()); })
+                    .collect(Collectors.toList());
+
+            if(! CollectionUtils.isEmpty(oppositeTransactions)){
+                TransactionEntity oppositeTransaction = oppositeTransactions.get(0);
+                LOG.info(MessageFormat.format("Opposite transaction found for transaction {0} : transaction {1}. Marking them as internal transactions.",
+                        transaction.getSequenceNumber(), oppositeTransaction.getSequenceNumber()));
+
+                transaction.markAsInternal();
+                oppositeTransaction.markAsInternal();
+                this.transactionService.save(oppositeTransaction);
+            }
+        }
         return transaction;
     }
 
