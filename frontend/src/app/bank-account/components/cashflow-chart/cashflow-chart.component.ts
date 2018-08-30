@@ -70,6 +70,9 @@ export class CashflowChartComponent implements OnInit, AfterViewInit, OnChanges 
           }
         }
       },
+      legend: {
+        data: [ 'Income', 'Expense', 'Net earnings' ]
+      },
       xAxis: [
         {
           type: 'category',
@@ -98,7 +101,7 @@ export class CashflowChartComponent implements OnInit, AfterViewInit, OnChanges 
           type: 'bar',
           color: 'red',
           data: this.cashflowHistory.map(data => {
-            return data.expense;
+            return -data.expense;
           })
         },
         {
@@ -113,13 +116,18 @@ export class CashflowChartComponent implements OnInit, AfterViewInit, OnChanges 
       dataZoom: [
         {
           show: true,
-          start: 85,
-          end: 100
         },
         {
           type: 'inside',
-          start: 85,
-          end: 100
+        },
+        {
+          show: true,
+          yAxisIndex: 0,
+          filterMode: 'empty',
+          width: 30,
+          height: '80%',
+          showDataShadow: false,
+          left: '93%'
         }
       ]
     };
