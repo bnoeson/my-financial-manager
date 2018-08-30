@@ -9,8 +9,10 @@
         <span class="title" mat-line>Home</span>
       </a>
       <a mat-list-item class="sidenav-link" [routerLink]="['/balance']" (click)="sidenav.toggle()">
-        <mat-icon mat-list-icon>account_balance</mat-icon>
         <span class="title" mat-line>Balance</span>
+      </a>
+      <a mat-list-item class="sidenav-link" [routerLink]="['/cashflow']" (click)="sidenav.toggle()">
+        <span class="title" mat-line>Cashflow</span>
       </a>
       <a mat-list-item class="sidenav-link" [routerLink]="['/transaction-file']" (click)="sidenav.toggle()">
         <span class="title" mat-line>Transactions file</span>

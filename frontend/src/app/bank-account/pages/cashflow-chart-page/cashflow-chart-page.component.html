@@ -1,0 +1,18 @@
+<div class="container">
+
+  <mat-button-toggle-group #timeframeSelection="matButtonToggleGroup" value="month">
+    <mat-button-toggle value="week">
+      Week
+    </mat-button-toggle>
+    <mat-button-toggle value="month">
+      Month
+    </mat-button-toggle>
+    <mat-button-toggle value="year">
+      Year
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <div *ngIf='transactionDtos' style="height: 500px; width: 100%"> <!-- postpone initialization to wait for rest call success -->
+    <mf-cashflow-chart [transactionDtos]="transactionDtos" [timeframe]="timeframeSelection.value"></mf-cashflow-chart>
+  </div>
+</div>
