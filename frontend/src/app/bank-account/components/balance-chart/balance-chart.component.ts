@@ -2,10 +2,10 @@ import {AfterViewInit, Component, Input} from '@angular/core';
 import { Moment } from 'moment';
 import { TransactionDto } from '../../model/TransactionDto';
 import { MatDialog } from '@angular/material';
+import { TransactionService } from '../../shared/transaction.service';
 import { TransactionDialogComponent } from '../transaction-dialog/transaction-dialog.component';
 import * as moment from 'moment';
 
-// import * as echarts from 'echarts';
 declare const echarts: any;
 
 @Component({
@@ -19,7 +19,7 @@ export class BalanceChartComponent implements AfterViewInit {
 
   private balanceHistory: Array<BalanceChartData>;
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private transactionService: TransactionService) { }
 
   ngAfterViewInit() {
     const self = this;
@@ -48,8 +48,7 @@ export class BalanceChartComponent implements AfterViewInit {
         })
       },
       yAxis: {
-        type: 'value',
-        boundaryGap: [0, '100%']
+        type: 'value'
       },
       dataZoom: [{
         type: 'inside',
@@ -108,7 +107,7 @@ export class BalanceChartComponent implements AfterViewInit {
   }
 
   private getBalanceHistory(transactionDtos: Array<TransactionDto>): Array<BalanceChartData> {
-    const sortedTransactionDtos = this.sortByExecutionDate(transactionDtos);
+    const sortedTransactionDtos = this.transactionService.sortByExecutionDate(transactionDtos);
 
     const balanceHistory: Array<BalanceChartData> = [];
     let balance = 0;
@@ -116,7 +115,7 @@ export class BalanceChartComponent implements AfterViewInit {
     let dayTransactions: Array<TransactionDto> = [];
     let transactionIndex = 0;
     let date: Moment = moment(sortedTransactionDtos[transactionIndex].executionDate).startOf('day');
-    while (date <= moment().startOf('day') ) {
+    while (date.isSameOrBefore(moment().startOf('day')) ) {
       dayAmount = 0;
       dayTransactions = [];
 
@@ -136,19 +135,6 @@ export class BalanceChartComponent implements AfterViewInit {
       date = date.add(1, 'day');
     }
     return balanceHistory;
-  }
-
-  private sortByExecutionDate(data: Array<TransactionDto>) {
-    data.sort(function (a, b) {
-      if (a.executionDate < b.executionDate) {
-        return -1;
-      }
-      if (a.executionDate > b.executionDate) {
-        return 1;
-      }
-      return 0;
-    });
-    return data;
   }
 
   openDialog(transactionDtos: Array<TransactionDto>): void {

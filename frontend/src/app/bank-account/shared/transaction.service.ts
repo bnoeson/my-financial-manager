@@ -37,4 +37,16 @@ export class TransactionService {
     return this._http.get(`${ApiUrls.TRANSACTIONS_API}/${id}`);
   }
 
+  sortByExecutionDate(data: Array<TransactionDto>) {
+    return data.sort(function (a, b) {
+      if (a.executionDate < b.executionDate) {
+        return -1;
+      }
+      if (a.executionDate > b.executionDate) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
 }
