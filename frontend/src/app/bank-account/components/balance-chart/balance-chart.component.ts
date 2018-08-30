@@ -153,9 +153,13 @@ class BalanceChartData {
 
   constructor(date: Date, balance: number, amount: number, transactions: Array<TransactionDto>) {
     this.date = date;
-    this.balance = balance.toFixed(2);
-    this.amount = amount.toFixed(2);
+    this.balance = this.getPrintableNumber(balance);
+    this.amount = this.getPrintableNumber(amount);
     this.transactions = transactions;
+  }
+
+  getPrintableNumber(n: number): string {
+    return (n > 0) ? '+' + n.toFixed(2) : n.toFixed(2);
   }
 
 }
