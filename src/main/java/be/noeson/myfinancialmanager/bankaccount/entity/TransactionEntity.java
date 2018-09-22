@@ -54,6 +54,9 @@ public class TransactionEntity implements Serializable {
     @NotNull
     private boolean isInternal;
 
+    @Column(name = "CATEGORY")
+    private String category;
+
     @JsonIgnoreProperties("transactions")
     @ManyToOne
     @JoinColumn(name = "INVESTMENT")
@@ -73,6 +76,7 @@ public class TransactionEntity implements Serializable {
         this.setCounterparty(builder.counterparty);
         this.setDetails(builder.details);
         this.setInternal(builder.isInternal);
+        this.setCategory(null);
         this.setInvestment(null);
     }
 
@@ -220,6 +224,14 @@ public class TransactionEntity implements Serializable {
 
     public void markAsInternal(){
         this.setInternal(true);
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public InvestmentEntity getInvestment() {

@@ -35,6 +35,7 @@ export class TransactionService {
               .withCounterparty(resp.counterparty)
               .withDetails(resp.details)
               .withAccountNumber(resp.accountNumber)
+              .withCategory(resp.category)
               .withIsInternal(resp.internal)
               .build();
           })
