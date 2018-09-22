@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/internal/operators';
+import { InvestmentDto, InvestmentDtoBuilder } from '../model/InvestmentDto';
 import { TransactionDto, TransactionDtoBuilder } from '../model/TransactionDto';
 
 @Injectable({
@@ -16,6 +17,14 @@ export class TransactionService {
       .pipe(
         map((response: Array<any>) =>
           response.map((resp) => {
+
+            let investment: InvestmentDto = null;
+            if (resp.investment) {
+              investment = new InvestmentDtoBuilder()
+                .withId(resp.investment.id)
+                .withName(resp.investment.name)
+                .build();
+            }
             return new TransactionDtoBuilder()
               .withId(resp.id)
               .withSequenceNumber(resp.sequenceNumber)

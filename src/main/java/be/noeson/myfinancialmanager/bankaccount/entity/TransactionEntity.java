@@ -1,6 +1,7 @@
 package be.noeson.myfinancialmanager.bankaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.apache.commons.lang3.Validate;
@@ -53,6 +54,11 @@ public class TransactionEntity implements Serializable {
     @NotNull
     private boolean isInternal;
 
+    @JsonIgnoreProperties("transactions")
+    @ManyToOne
+    @JoinColumn(name = "INVESTMENT")
+    private InvestmentEntity investment;
+
     // default constructor
     public TransactionEntity() {
     }
@@ -67,6 +73,7 @@ public class TransactionEntity implements Serializable {
         this.setCounterparty(builder.counterparty);
         this.setDetails(builder.details);
         this.setInternal(builder.isInternal);
+        this.setInvestment(null);
     }
 
     public static class Builder {
@@ -213,5 +220,13 @@ public class TransactionEntity implements Serializable {
 
     public void markAsInternal(){
         this.setInternal(true);
+    }
+
+    public InvestmentEntity getInvestment() {
+        return investment;
+    }
+
+    public void setInvestment(InvestmentEntity investment) {
+        this.investment = investment;
     }
 }

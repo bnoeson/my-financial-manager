@@ -1,3 +1,4 @@
+import { InvestmentDto } from './InvestmentDto';
 
 export class TransactionDtoBuilder {
 
@@ -11,6 +12,7 @@ export class TransactionDtoBuilder {
   private _details: string;
   private _accountNumber: string;
   private _isInternal: boolean;
+  private _investment: InvestmentDto;
 
   get id(): number {
     return this._id;
@@ -102,6 +104,15 @@ export class TransactionDtoBuilder {
     return this;
   }
 
+  get investment(): InvestmentDto {
+    return this._investment;
+  }
+
+  withInvestment(investment: InvestmentDto) {
+    this._investment = investment;
+    return this;
+  }
+
   build(): TransactionDto {
     return new TransactionDto(this);
   }
@@ -119,6 +130,7 @@ export class TransactionDto {
   private _details: string;
   private _accountNumber: string;
   private _isInternal: boolean;
+  private _investment: InvestmentDto;
 
   constructor(builder: TransactionDtoBuilder) {
     this._id = builder.id;
@@ -131,6 +143,7 @@ export class TransactionDto {
     this._details = builder.details;
     this._accountNumber = builder.accountNumber;
     this._isInternal = builder.isInternal;
+    this._investment = builder.investment;
   }
 
   get id(): number {
@@ -215,6 +228,14 @@ export class TransactionDto {
 
   set isInternal(value: boolean) {
     this._isInternal = value;
+  }
+
+  get investment(): InvestmentDto {
+    return this._investment;
+  }
+
+  set investment(value: InvestmentDto) {
+    this._investment = value;
   }
 }
 
