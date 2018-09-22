@@ -1,18 +1,45 @@
-<div class="container">
+<div class="container-fluid">
 
-  <mat-button-toggle-group #timeframeSelection="matButtonToggleGroup" value="month">
-    <mat-button-toggle value="week">
-      Week
-    </mat-button-toggle>
-    <mat-button-toggle value="month">
-      Month
-    </mat-button-toggle>
-    <mat-button-toggle value="year">
-      Year
-    </mat-button-toggle>
-  </mat-button-toggle-group>
+  <div class="row" style="margin-top:25px">
 
-  <div *ngIf='transactionDtos' style="height: 500px; width: 100%"> <!-- postpone initialization to wait for rest call success -->
-    <mf-cashflow-chart [transactionDtos]="transactionDtos" [timeframe]="timeframeSelection.value"></mf-cashflow-chart>
+    <div class="col-md-2 offset-md-1">
+
+      <div style="margin-top:15px">
+        <mat-button-toggle-group #timeframeSelection="matButtonToggleGroup" value="month">
+          <mat-button-toggle value="week">
+            Week
+          </mat-button-toggle>
+          <mat-button-toggle value="month">
+            Month
+          </mat-button-toggle>
+          <mat-button-toggle value="year">
+            Year
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <div style="margin-top:15px">
+        <div *ngFor="let category of categories | keyvalue">
+          <mat-checkbox (change)=setChangeDetectable() [(ngModel)]="categories[category.key]" >{{ category.key == "null" ? "Other" : category.key }}</mat-checkbox>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-8">
+      <div *ngIf='transactionDtos' style="height: 500px; width: 100%"> <!-- postpone initialization to wait for rest call success -->
+
+        <mf-cashflow-chart
+          [transactionDtos]="transactionDtos"
+          [timeframe]="timeframeSelection.value"
+          [categories]="categories">
+        </mf-cashflow-chart>
+
+      </div>
+    </div>
+
   </div>
+
+
+
 </div>

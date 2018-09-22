@@ -17,6 +17,7 @@ export class CashflowChartComponent implements OnInit, AfterViewInit, OnChanges 
 
   @Input() transactionDtos: Array<TransactionDto>;
   @Input() timeframe: string;
+  @Input() categories: Object;
 
   public cashflowHistory: Array<CashflowChartData>;
   public cashflowChart: ECharts;
@@ -45,15 +46,20 @@ export class CashflowChartComponent implements OnInit, AfterViewInit, OnChanges 
   }
 
   createHistory(): Array<CashflowChartData> {
-    const sortedTransactionDtos: Array<TransactionDto> = this.transactionService.sortByExecutionDate(this.transactionDtos);
+    const self = this;
+    let effectiveTransactionDtos: Array<TransactionDto> = this.transactionService.sortByExecutionDate(this.transactionDtos);
+    effectiveTransactionDtos = effectiveTransactionDtos
+      .filter(transaction => {
+        return self.categories[transaction.category];
+      });
 
     let cashflowHistory: Array<CashflowChartData>;
     if (this.timeframe === 'week') {
-      cashflowHistory = this.getWeeklyCashflowHistory(sortedTransactionDtos);
+      cashflowHistory = this.getWeeklyCashflowHistory(effectiveTransactionDtos);
     } else if (this.timeframe === 'month') {
-      cashflowHistory = this.getMonthlyCashflowHistory(sortedTransactionDtos);
+      cashflowHistory = this.getMonthlyCashflowHistory(effectiveTransactionDtos);
     } else if (this.timeframe === 'year') {
-      cashflowHistory = this.getYearlyCashflowHistory(sortedTransactionDtos);
+      cashflowHistory = this.getYearlyCashflowHistory(effectiveTransactionDtos);
     }
     return cashflowHistory;
   }

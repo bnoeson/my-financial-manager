@@ -2,7 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  MatButtonModule, MatButtonToggleModule, MatCardModule, MatDialogModule, MatInputModule, MatSortModule, MatTableModule
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatDialogModule,
+  MatInputModule,
+  MatSortModule,
+  MatTableModule
 } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,6 +37,7 @@ import { CashflowChartPageComponent } from './pages/cashflow-chart-page/cashflow
     MatDialogModule,
     FormsModule,
     MatButtonToggleModule,
+    MatCheckboxModule,
   ],
   declarations: [
     TransactionTableComponent,
