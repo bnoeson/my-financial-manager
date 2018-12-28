@@ -211,7 +211,7 @@ public class TransactionEntity implements Serializable {
     }
 
     private void setDetails(String details) {
-        this.details = Validate.notEmpty(details);
+        this.details = details;
     }
 
     public boolean isInternal() {
