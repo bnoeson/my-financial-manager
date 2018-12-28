@@ -114,7 +114,9 @@ export class BalanceChartComponent implements AfterViewInit {
     let dayAmount = 0;
     let dayTransactions: Array<TransactionDto> = [];
     let transactionIndex = 0;
-    let date: Moment = moment(sortedTransactionDtos[transactionIndex].executionDate).startOf('day');
+    const firstDate = sortedTransactionDtos[transactionIndex] !== undefined ?
+      sortedTransactionDtos[transactionIndex].executionDate : Date.now() ;
+    let date: Moment = moment(firstDate).startOf('day');
     while (date.isSameOrBefore(moment().startOf('day')) ) {
       dayAmount = 0;
       dayTransactions = [];

@@ -166,7 +166,9 @@ export class CashflowChartComponent implements OnInit, AfterViewInit, OnChanges 
     let expense: number;
     let netEarnings: number;
     let transactions: Array<TransactionDto>;
-    let startOfTimeframe: Moment = moment(sortedTransactionDtos[transactionIndex].executionDate).startOf(timeframe);
+    const firstDate = sortedTransactionDtos[transactionIndex] !== undefined ?
+      sortedTransactionDtos[transactionIndex].executionDate : Date.now() ;
+    let startOfTimeframe: Moment = moment(firstDate).startOf(timeframe);
 
     while (startOfTimeframe.isSameOrBefore(moment().startOf(timeframe)) ) {
       income = 0;
