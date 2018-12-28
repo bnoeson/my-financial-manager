@@ -3,6 +3,8 @@ version: '3'
 services:
   myfindb:
     image: mysql
+    volumes:
+      - db_data:/var/lib/mysql
     container_name: myfindb
     ports:
       - 3306:3306
@@ -32,3 +34,6 @@ services:
       - myfinancialmanager
     ports:
       - 3000:80
+
+volumes:
+  db_data: {}
